@@ -1,0 +1,48 @@
+stages:
+  - build
+  - test
+
+# Build du backend Java et Spring Boot
+build_backend:
+  stage: build
+  image: maven:3.8.5-openjdk-21
+  script:
+    - mvn clean package -DskipTests
+  artifacts:
+    paths:
+      - target/*.jar
+  only:
+    - develop
+
+# Build du frontend React 18
+build_frontend:
+  stage: build
+  image: node:18
+  script:
+    - cd frontend
+    - npm install
+    - npm run build
+  artifacts:
+    paths:
+      - frontend/build/
+  only:
+    - develop
+
+# Tests backend
+test_backend:
+  stage: test
+  image: maven:3.8.5-openjdk-21
+  script:
+    - mvn test
+  only:
+    - develop
+
+# Tests frontend
+test_frontend:
+  stage: test
+  image: node:18
+  script:
+    - cd frontend
+    - npm test
+  only:
+    - develop
