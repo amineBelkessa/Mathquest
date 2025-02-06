@@ -34,11 +34,15 @@ build_frontend:
 # Tests backend
 test_backend:
   stage: test
-  image: maven:3.8.5-openjdk-21
+  image: ubuntu:latest
   script:
+    - apt update && apt install -y openjdk-21-jdk maven
+    - java -version
+    - mvn -version
     - mvn test
   only:
     - dev
+
 
 # Tests frontend
 test_frontend:
@@ -46,6 +50,8 @@ test_frontend:
   image: node:18
   script:
     - cd frontend
+    - npm ci
     - npm test
   only:
     - dev
+
