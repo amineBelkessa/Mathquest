@@ -5,7 +5,7 @@ stages:
 # Build du backend Java et Spring Boot
 build_backend:
   stage: build
-  image: maven:3.8.5-openjdk-21
+  image: maven:3.8.5-eclipse-temurin-21
   script:
     - mvn clean package -DskipTests
   artifacts:
