@@ -34,13 +34,11 @@ build_frontend:
 # Tests backend
 test_backend:
   stage: test
-  image: maven:3.8.8-eclipse-temurin-21
+  image: maven:3.8.5-openjdk-21
   script:
-    - mvn test -X
+    - mvn test
   only:
     - dev
-
-
 
 # Tests frontend
 test_frontend:
@@ -48,11 +46,6 @@ test_frontend:
   image: node:18
   script:
     - cd frontend
-    - rm -rf node_modules package-lock.json
-    - npm install
-    - npm audit fix --force
     - npm test
   only:
     - dev
-
-
