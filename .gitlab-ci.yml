@@ -12,7 +12,7 @@ build_backend:
     paths:
       - target/*.jar
   only:
-    - develop
+    - dev
 
 # Build du frontend React 18
 build_frontend:
@@ -26,7 +26,7 @@ build_frontend:
     paths:
       - frontend/build/
   only:
-    - develop
+    - dev
 
 # Tests backend
 test_backend:
@@ -35,7 +35,7 @@ test_backend:
   script:
     - mvn test
   only:
-    - develop
+    - dev
 
 # Tests frontend
 test_frontend:
@@ -45,4 +45,4 @@ test_frontend:
     - cd frontend
     - npm test
   only:
-    - develop
+    - dev
