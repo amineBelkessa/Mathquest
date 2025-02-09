@@ -34,7 +34,7 @@ build_frontend:
 # Tests backend
 test_backend:
   stage: test
-  image: maven:3.8.7-openjdk-21
+  image: maven:3.9.6-eclipse-temurin-21
   script:
     - mvn test
   only:
@@ -46,6 +46,7 @@ test_frontend:
   image: node:18
   script:
     - cd frontend
+    - npm install
     - npm test
   only:
     - dev
