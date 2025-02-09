@@ -47,6 +47,6 @@ test_frontend:
   script:
     - cd frontend
     - npm install
-    - npm test
+    - npm test -- --watchAll=false
   only:
     - dev
