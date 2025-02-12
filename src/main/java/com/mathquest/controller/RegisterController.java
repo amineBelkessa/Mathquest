@@ -3,19 +3,18 @@ package com.mathquest.controller;
 import com.mathquest.model.User;
 import com.mathquest.service.UserService;
 import com.mathquest.util.JwtUtils;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
 @CrossOrigin(origins = "http://localhost:3000")
 
-public class AuthController {
+public class RegisterController {
 
     private final UserService userService;
     private final JwtUtils jwtUtils;
 
-    public AuthController(UserService userService, JwtUtils jwtUtils) {
+    public RegisterController(UserService userService, JwtUtils jwtUtils) {
         this.userService = userService;
         this.jwtUtils = jwtUtils;
     }
