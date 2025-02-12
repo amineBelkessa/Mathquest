@@ -18,10 +18,10 @@ public class UserService {
     }
 
     public User registerUser(String username, String email, String rawPassword) throws Exception {
-        if(userRepository.existsByEmail(email)) {
+        if (userRepository.existsByEmail(email)) {
             throw new Exception("Email déjà utilisé !");
         }
-        if(userRepository.existsByUsername(username)) {
+        if (userRepository.existsByUsername(username)) {
             throw new Exception("Nom d'utilisateur déjà utilisé !");
         }
         String hashedPassword = passwordEncoder.encode(rawPassword);
@@ -29,15 +29,4 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public User loginUser(String email, String rawPassword) throws Exception {
-        Optional<User> userOpt = userRepository.findByEmail(email);
-        if(userOpt.isEmpty()) {
-            throw new Exception("Email non trouvé !");
-        }
-        User user = userOpt.get();
-        if(!passwordEncoder.matches(rawPassword, user.getPassword())) {
-            throw new Exception("Mot de passe incorrect !");
-        }
-        return user;
-    }
 }

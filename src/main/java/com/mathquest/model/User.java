@@ -3,7 +3,7 @@ package com.mathquest.model;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-@Document(collection = "users") // collection Mongo
+@Document(collection = "eleves") // collection Mongo
 public class User {
 
     @Id

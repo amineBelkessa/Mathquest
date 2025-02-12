@@ -7,8 +7,9 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/api/auth")
-@CrossOrigin // si besoin
+@RequestMapping("/api")
+@CrossOrigin(origins = "http://localhost:3000")
+
 public class AuthController {
 
     private final UserService userService;
@@ -25,23 +26,14 @@ public class AuthController {
         public String email;
         public String password;
     }
-    static class LoginRequest {
-        public String email;
-        public String password;
-    }
+
 
     @PostMapping("/register")
+    @CrossOrigin(origins = "http://localhost:3000")
     public String register(@RequestBody RegisterRequest request) throws Exception {
         User user = userService.registerUser(request.username, request.email, request.password);
         // Générer un token
         String token = jwtUtils.generateToken(user.getEmail());
         return token; // ou un objet JSON
-    }
-
-    @PostMapping("/login")
-    public String login(@RequestBody LoginRequest request) throws Exception {
-        User user = userService.loginUser(request.email, request.password);
-        String token = jwtUtils.generateToken(user.getEmail());
-        return token;
     }
 }
