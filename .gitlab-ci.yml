@@ -1,8 +1,9 @@
+---
 stages:
   - build
   - test
 
-# 🔹 Build du backend (Spring Boot & Java 21)
+# Build du backend (Spring Boot & Java 21)
 build_backend:
   stage: build
   image: maven:3.9.6-eclipse-temurin-21  # Image Maven avec Java 21 intégré
@@ -12,7 +13,7 @@ build_backend:
     paths:
       - target/*.jar  # Sauvegarde du fichier JAR compilé
 
-# 🔹 Build du frontend (React 18)
+# Build du frontend (React 18)
 build_frontend:
   stage: build
   image: node:20  # Utilisation de Node.js 20 pour éviter les erreurs
@@ -24,14 +25,14 @@ build_frontend:
     paths:
       - frontend/build/
 
-# 🔹 Tests backend (JUnit & Spring Boot Test)
+# Tests backend (JUnit & Spring Boot Test)
 test_backend:
   stage: test
   image: maven:3.9.6-eclipse-temurin-21
   script:
     - mvn test -X  # Active le mode debug pour voir les erreurs détaillées
 
-# 🔹 Tests frontend (React + Jest)
+# Tests frontend (React + Jest)
 test_frontend:
   stage: test
   image: node:20
@@ -40,6 +41,3 @@ test_frontend:
     - npm install
     - npm test -- --watchAll=false  # Désactive le mode interactif Jest
 
-# 🔹 Exécuter le pipeline sur toutes les branches
-rules:
-  - if: '$CI_COMMIT_BRANCH'
