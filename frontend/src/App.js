@@ -1,21 +1,27 @@
-import React, { useEffect, useState } from "react";
+// src/App.js
+import React from "react";
+import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
+import RegisterForm from "./components/Auth/RegisterForm";
+import Home from "./pages/Home";
+import Dashboard from "./pages/Dashboard";
+
+// IMPORT du composant PrivateRoute
 
 function App() {
-  const [message, setMessage] = useState("");
+    return (
+        <Router>
+            <nav>
+                <Link to="/">Accueil</Link>
+                <Link to="/register">Inscription</Link>
+            </nav>
 
-  useEffect(() => {
-    fetch("http://localhost:8080/api/hello") // Appel API Spring Boot
-        .then(response => response.text()) // Convertir la réponse en texte
-        .then(data => setMessage(data)) // Stocker la réponse dans le state
-        .catch(error => console.error("Erreur API:", error)); // Afficher l'erreur si besoin
-  }, []);
+            <Routes>
+                <Route path="/" element={<Home />} />
+                <Route path="/register" element={<RegisterForm />} />
 
-  return (
-      <div>
-        <h1>Bienvenue sur MathQuest</h1>
-        <p>{message}</p> {/* Afficher la réponse ici */}
-      </div>
-  );
+            </Routes>
+        </Router>
+    );
 }
 
 export default App;
