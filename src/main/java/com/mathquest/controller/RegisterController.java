@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-@CrossOrigin(origins = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr")
+@CrossOrigin(origins = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr:3000")
 
 public class RegisterController {
 
@@ -28,7 +28,7 @@ public class RegisterController {
 
 
     @PostMapping("/register")
-    @CrossOrigin(origins = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr")
+    @CrossOrigin(origins = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr:3000")
     public String register(@RequestBody RegisterRequest request) throws Exception {
         User user = userService.registerUser(request.username, request.email, request.password);
         // Générer un token
