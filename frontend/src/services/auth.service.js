@@ -1,9 +1,10 @@
 // src/services/auth.service.js
 
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr:8080"; // URL du backend
+const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr:8080/api"; // Add `/api`
+ // URL du backend
 
 export async function register(username, email, password) {
-    const response = await fetch(`${API_URL}/register`, {
+    const response = await fetch(API_URL + "/register", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
