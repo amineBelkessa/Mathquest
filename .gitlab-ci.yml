@@ -3,64 +3,43 @@ stages:
   - build
   - test
 
-variables:
-  MAVEN_OPTS: "-Dfile.encoding=UTF-8"
-  NODE_OPTIONS: "--max_old_space_size=4096"  # Évite les erreurs de mémoire avec React
-
-# ➤ Build du backend (Spring Boot + Java 21)
+# Build du backend (Spring Boot & Java 21)
 build_backend:
   stage: build
   image: maven:3.9.6-eclipse-temurin-21
-  cache:
-    key: maven-cache
-    paths:
-      - .m2/repository  # Cache les dépendances Maven
+  variables:
+    MAVEN_OPTS: "-Dfile.encoding=UTF-8"  # Force l'encodage UTF-8
   script:
-    - echo "➡️ Build du backend en cours..."
     - mvn clean package -DskipTests -Dfile.encoding=UTF-8
   artifacts:
     paths:
       - target/*.jar
-    expire_in: 1 hour  # Garde le build pendant 1h
 
-# ➤ Build du frontend (React 18)
+# Build du frontend (React 18)
 build_frontend:
   stage: build
   image: node:20
-  cache:
-    key: npm-cache
-    paths:
-      - frontend/node_modules  # Cache les dépendances npm
   script:
-    - echo "➡️ Build du frontend en cours..."
     - cd frontend
     - npm install
-    - CI='' npm run build --verbose  # Désactive ESLint bloquant + active logs détaillés
+    - CI='' npm run build
   artifacts:
     paths:
       - frontend/build/
-    expire_in: 1 hour
 
-# ➤ Tests backend (JUnit + Spring Boot Test)
+# Tests backend
 test_backend:
   stage: test
   image: maven:3.9.6-eclipse-temurin-21
   script:
-    - echo "➡️ Exécution des tests backend..."
-    - mvn test -X  # Active le mode debug détaillé
-  allow_failure: false  # Le job échoue si les tests échouent
+    - mvn test -X
 
-# ➤ Tests frontend (React + Jest)
+# Tests frontend
 test_frontend:
   stage: test
   image: node:20
-  cache:
-    key: npm-cache
-    paths:
-      - frontend/node_modules
   script:
-    - echo "➡️ Exécution des tests frontend..."
     - cd frontend
     - npm install
-    - npm test -- --watchAll=false --verbose  # Mode non interactif + logs détaillés
-  allow_failure: false
+    - npm test -- --watchAll=false
+
