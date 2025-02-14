@@ -38,8 +38,14 @@ test_backend:
 test_frontend:
   stage: test
   image: node:20
+  cache:
+    key: npm-cache
+    paths:
+      - frontend/node_modules
   script:
+    - echo "➡️ Exécution des tests frontend..."
     - cd frontend
     - npm install
-    - npm test -- --watchAll=false
+    - npm test -- --watchAll=false --passWithNoTests --verbose
+  allow_failure: false
 
