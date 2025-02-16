@@ -1,12 +1,16 @@
 import { useState } from "react";
 import { login } from "../../services/auth.service";
 import { useNavigate } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import "./Login.css";
 
 const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [loading, setLoading] = useState(false);
+    const [showPassword, setShowPassword] = useState(false); // État pour afficher/masquer le password
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
@@ -17,7 +21,7 @@ const Login = () => {
         try {
             await login(email, password);
             console.log("✅ Connexion réussie !");
-            navigate("/dashboard"); // Rediriger après connexion
+            navigate("/dashboard"); // Redirection après connexion
         } catch (err) {
             setError("Email ou mot de passe incorrect !");
         } finally {
@@ -26,44 +30,46 @@ const Login = () => {
     };
 
     return (
-        <div style={{ textAlign: "center", marginTop: "50px" }}>
-            <h2>Connexion</h2>
-            {error && <p style={{ color: "red" }}>{error}</p>}
+        <div className="login-container">
+            <div className="login-box">
+                <h2>Connexion</h2>
+                {error && <p className="error-message">{error}</p>}
 
-            <form onSubmit={handleSubmit}>
-                <input
-                    type="email"
-                    placeholder="Email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                    style={{ padding: "10px", margin: "10px", width: "250px" }}
-                />
-                <br />
-                <input
-                    type="password"
-                    placeholder="Mot de passe"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                    style={{ padding: "10px", margin: "10px", width: "250px" }}
-                />
-                <br />
-                <button
-                    type="submit"
-                    disabled={loading}
-                    style={{
-                        padding: "10px 20px",
-                        marginTop: "10px",
-                        backgroundColor: loading ? "#ccc" : "#007bff",
-                        color: "white",
-                        border: "none",
-                        cursor: loading ? "not-allowed" : "pointer"
-                    }}
-                >
-                    {loading ? "Connexion..." : "Se connecter"}
-                </button>
-            </form>
+                <form onSubmit={handleSubmit}>
+                    {/* Champ Email avec icône */}
+                    <div className="input-container">
+                        <FontAwesomeIcon icon={faEnvelope} className="icon" />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* Champ Mot de passe avec icône et visibilité */}
+                    <div className="input-container">
+                        <FontAwesomeIcon icon={faLock} className="icon" />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Mot de passe"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <FontAwesomeIcon
+                            icon={showPassword ? faEyeSlash : faEye}
+                            className="toggle-password"
+                            onClick={() => setShowPassword(!showPassword)}
+                        />
+                    </div>
+
+                    <button type="submit" disabled={loading}>
+                        {loading ? "Connexion..." : "Se connecter"}
+                    </button>
+                </form>
+            </div>
         </div>
     );
 };
