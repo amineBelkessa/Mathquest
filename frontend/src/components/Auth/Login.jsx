@@ -6,25 +6,30 @@ const Login = () => {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError("");
+        setLoading(true);
 
         try {
             await login(email, password);
-            console.log("Connexion réussie !");
+            console.log("✅ Connexion réussie !");
             navigate("/dashboard"); // Rediriger après connexion
         } catch (err) {
-            setError(err.message || "Une erreur est survenue.");
+            setError("Email ou mot de passe incorrect !");
+        } finally {
+            setLoading(false);
         }
     };
 
     return (
-        <div>
+        <div style={{ textAlign: "center", marginTop: "50px" }}>
             <h2>Connexion</h2>
             {error && <p style={{ color: "red" }}>{error}</p>}
+
             <form onSubmit={handleSubmit}>
                 <input
                     type="email"
@@ -32,6 +37,7 @@ const Login = () => {
                     value={email}
                     onChange={(e) => setEmail(e.target.value)}
                     required
+                    style={{ padding: "10px", margin: "10px", width: "250px" }}
                 />
                 <br />
                 <input
@@ -40,9 +46,23 @@ const Login = () => {
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
                     required
+                    style={{ padding: "10px", margin: "10px", width: "250px" }}
                 />
                 <br />
-                <button type="submit">Se connecter</button>
+                <button
+                    type="submit"
+                    disabled={loading}
+                    style={{
+                        padding: "10px 20px",
+                        marginTop: "10px",
+                        backgroundColor: loading ? "#ccc" : "#007bff",
+                        color: "white",
+                        border: "none",
+                        cursor: loading ? "not-allowed" : "pointer"
+                    }}
+                >
+                    {loading ? "Connexion..." : "Se connecter"}
+                </button>
             </form>
         </div>
     );

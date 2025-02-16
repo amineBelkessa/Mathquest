@@ -17,6 +17,7 @@ public class UserService {
         this.userRepository = userRepository;
     }
 
+    // Inscription
     public User registerUser(String username, String email, String rawPassword) throws Exception {
         if (userRepository.existsByEmail(email)) {
             throw new Exception("Email déjà utilisé !");
@@ -29,4 +30,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    // Connexion
+    public User authenticateUser(String email, String password) {
+        Optional<User> userOptional = userRepository.findByEmail(email);
+
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            if (passwordEncoder.matches(password, user.getPassword())) { // Vérifie le mot de passe hashé
+                return user; // Authentification réussie
+            }
+        }
+        return null; // Échec d'authentification
+    }
 }

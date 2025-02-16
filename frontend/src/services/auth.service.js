@@ -20,7 +20,7 @@ export async function register(username, email, password) {
 }
 
 export async function login(email, password) {
-    const response = await fetch(API_URL + "/Login", {
+    const response = await fetch(API_URL + "/login", {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -28,14 +28,16 @@ export async function login(email, password) {
         body: JSON.stringify({ email, password }),
     });
 
+    const data = await response.json();  // Récupérer la réponse JSON
+
     if (!response.ok) {
-        throw new Error("Identifiants incorrects");
+        throw new Error(data.message || "Identifiants incorrects");
     }
 
-    const data = await response.json();
-    localStorage.setItem("user", JSON.stringify(data)); // Stocker le token en local
+    localStorage.setItem("user", JSON.stringify(data)); // Stocker le token
     return data;
 }
+
 
 export function logout() {
     localStorage.removeItem("user");
