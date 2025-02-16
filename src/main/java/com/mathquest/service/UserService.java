@@ -31,7 +31,7 @@ public class UserService {
     }
 
     // Connexion
-    public User authenticateUser(String email, String password) {
+    public User loginUser(String email, String password) {
         Optional<User> userOptional = userRepository.findByEmail(email);
 
         if (userOptional.isPresent()) {

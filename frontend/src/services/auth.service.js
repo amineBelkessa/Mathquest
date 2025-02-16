@@ -28,15 +28,16 @@ export async function login(email, password) {
         body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.json();  // Récupérer la réponse JSON
+    const data = await response.text();  // ✅ Use text(), NOT json()
 
     if (!response.ok) {
-        throw new Error(data.message || "Identifiants incorrects");
+        throw new Error("Identifiants incorrects");
     }
 
-    localStorage.setItem("user", JSON.stringify(data)); // Stocker le token
+    localStorage.setItem("user", data); // Stocker le token JWT
     return data;
 }
+
 
 
 export function logout() {

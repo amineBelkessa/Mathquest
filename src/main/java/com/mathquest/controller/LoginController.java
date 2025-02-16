@@ -27,7 +27,7 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        User user = userService.authenticateUser(request.email, request.password);
+        User user = userService.loginUser(request.email, request.password);
         if (user == null) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect !");
         }
