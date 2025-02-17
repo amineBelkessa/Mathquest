@@ -21,7 +21,7 @@ const Login = () => {
         try {
             await login(email, password);
             console.log("Connexion réussie !");
-            navigate("/dashboard"); // Redirection après connexion
+            window.alert("Connexion réussie !");
         } catch (err) {
             setError("Email ou mot de passe incorrect !");
         } finally {
