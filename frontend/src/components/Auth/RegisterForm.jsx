@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom"; // Import de useNavigate
 import { register } from "../../services/auth.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
@@ -10,6 +11,7 @@ function RegisterForm() {
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false); // Pour afficher/masquer le mot de passe
+    const navigate = useNavigate(); // Hook de navigation pour la redirection
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -17,8 +19,11 @@ function RegisterForm() {
             const token = await register(username, email, password);
             localStorage.setItem("token", token);
             console.log("Inscription réussie, token =", token);
+
+            // Redirection vers /login après succès
+            navigate("/login");
         } catch (err) {
-            setError("Erreur lors de l’inscription : " + err.message);
+            setError("Email ou nom d'utilisateur déjà utilisé ");
         }
     };
 
@@ -26,7 +31,7 @@ function RegisterForm() {
         <div className="register-container">
             <div className="register-box">
                 <h2>Inscription</h2>
-                {error && <p className="error-message">{error}</p>}
+                {error && <p className="error-message">{error}</p>} {/* Affiche l'erreur sous forme de texte */}
 
                 <form onSubmit={handleSubmit}>
                     {/* Champ Nom d'utilisateur avec icône */}
