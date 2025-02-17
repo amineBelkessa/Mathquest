@@ -17,7 +17,7 @@ public class CorsConfig {
         CorsConfiguration config = new CorsConfiguration();
         config.setAllowCredentials(true);
         config.setAllowedOriginPatterns(Arrays.asList(
-                "http://srv-dpi-proj-mathquest-test.univ-rouen.fr:3000",
+                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000",
                 "http://*.univ-rouen.fr",
                 "http://localhost:*"
         ));
