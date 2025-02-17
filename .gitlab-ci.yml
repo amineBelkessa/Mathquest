@@ -1,0 +1,51 @@
+---
+stages:
+  - build
+  - test
+
+# Build du backend (Spring Boot & Java 21)
+build_backend:
+  stage: build
+  image: maven:3.9.6-eclipse-temurin-21
+  variables:
+    MAVEN_OPTS: "-Dfile.encoding=UTF-8"  # Force l'encodage UTF-8
+  script:
+    - mvn clean package -DskipTests -Dfile.encoding=UTF-8
+  artifacts:
+    paths:
+      - target/*.jar
+
+# Build du frontend (React 18)
+build_frontend:
+  stage: build
+  image: node:20
+  script:
+    - cd frontend
+    - npm install
+    - CI='' npm run build
+  artifacts:
+    paths:
+      - frontend/build/
+
+# Tests backend
+test_backend:
+  stage: test
+  image: maven:3.9.6-eclipse-temurin-21
+  script:
+    - mvn test -X
+
+# Tests frontend
+test_frontend:
+  stage: test
+  image: node:20
+  cache:
+    key: npm-cache
+    paths:
+      - frontend/node_modules
+  script:
+    - echo "➡️ Exécution des tests frontend..."
+    - cd frontend
+    - npm install
+    - npm test -- --watchAll=false --passWithNoTests --verbose
+  allow_failure: false
+
