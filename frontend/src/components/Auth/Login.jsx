@@ -20,7 +20,7 @@ const Login = () => {
 
         try {
             await login(email, password);
-            console.log("✅ Connexion réussie !");
+            console.log("Connexion réussie !");
             navigate("/dashboard"); // Redirection après connexion
         } catch (err) {
             setError("Email ou mot de passe incorrect !");

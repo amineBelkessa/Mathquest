@@ -1,12 +1,15 @@
-// src/components/Auth/RegisterForm.jsx
 import React, { useState } from "react";
 import { register } from "../../services/auth.service";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import "./Register.css";
 
 function RegisterForm() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [error, setError] = useState("");
+    const [showPassword, setShowPassword] = useState(false); // Pour afficher/masquer le mot de passe
 
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -14,44 +17,63 @@ function RegisterForm() {
             const token = await register(username, email, password);
             localStorage.setItem("token", token);
             console.log("Inscription réussie, token =", token);
-            // Redirection ou autre action
         } catch (err) {
             setError("Erreur lors de l’inscription : " + err.message);
         }
     };
 
     return (
-        <form onSubmit={handleSubmit}>
-            <div>
-                <label>Nom d'utilisateur :</label>
-                <input
-                    type="text"
-                    value={username}
-                    onChange={(e) => setUsername(e.target.value)}
-                    required
-                />
+        <div className="register-container">
+            <div className="register-box">
+                <h2>Inscription</h2>
+                {error && <p className="error-message">{error}</p>}
+
+                <form onSubmit={handleSubmit}>
+                    {/* Champ Nom d'utilisateur avec icône */}
+                    <div className="input-container">
+                        <FontAwesomeIcon icon={faUser} className="icon" />
+                        <input
+                            type="text"
+                            placeholder="Nom d'utilisateur"
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* Champ Email avec icône */}
+                    <div className="input-container">
+                        <FontAwesomeIcon icon={faEnvelope} className="icon" />
+                        <input
+                            type="email"
+                            placeholder="Email"
+                            value={email}
+                            onChange={(e) => setEmail(e.target.value)}
+                            required
+                        />
+                    </div>
+
+                    {/* Champ Mot de passe avec icône et visibilité */}
+                    <div className="input-container">
+                        <FontAwesomeIcon icon={faLock} className="icon" />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            placeholder="Mot de passe"
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
+                            required
+                        />
+                        <FontAwesomeIcon
+                            icon={showPassword ? faEyeSlash : faEye}
+                            className="toggle-password"
+                            onClick={() => setShowPassword(!showPassword)}
+                        />
+                    </div>
+
+                    <button type="submit">S'inscrire</button>
+                </form>
             </div>
-            <div>
-                <label>Email :</label>
-                <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    required
-                />
-            </div>
-            <div>
-                <label>Mot de passe :</label>
-                <input
-                    type="password"
-                    value={password}
-                    onChange={(e) => setPassword(e.target.value)}
-                    required
-                />
-            </div>
-            {error && <p style={{ color: "red" }}>{error}</p>}
-            <button type="submit">S'inscrire</button>
-        </form>
+        </div>
     );
 }
 

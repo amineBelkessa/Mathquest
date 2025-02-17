@@ -1,0 +1,103 @@
+/* Conteneur principal */
+.register-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    padding: 20px;
+}
+
+/* Boîte du formulaire */
+.register-box {
+    background: white;
+    padding: 2rem;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
+    width: 100%;
+    max-width: 350px;
+    text-align: center;
+}
+
+/* Titre */
+.register-box h2 {
+    margin-bottom: 20px;
+    color: #333;
+}
+
+/* Conteneur des champs */
+.input-container {
+    position: relative;
+    margin: 10px 0;
+}
+
+/* Champs input avec icône */
+.input-container input {
+    width: calc(100% - 20px);
+    padding: 12px 10px 12px 40px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
+/* Icônes */
+.input-container .icon {
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #777;
+}
+
+/* Icône pour afficher/masquer le mot de passe */
+.input-container .toggle-password {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+}
+
+.input-container .toggle-password:hover {
+    color: #007bff;
+}
+
+/* Bouton */
+.register-box button {
+    width: 100%;
+    padding: 12px;
+    margin-top: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.register-box button:hover {
+    background-color: #0056b3;
+}
+
+/* Adaptation pour petits écrans */
+@media (max-width: 400px) {
+    .register-box {
+        width: 90%;
+        padding: 1.5rem;
+    }
+}
+
+/* Message d'erreur */
+.error-message {
+    color: red;
+    font-size: 14px;
+    font-weight: bold;
+    margin-top: 10px;
+    background: #ffe6e6;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid red;
+}
