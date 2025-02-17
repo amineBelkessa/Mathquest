@@ -36,7 +36,7 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://srv-dpi-proj-mathquest-test.univ-rouen.fr:3000","http://*.univ-rouen.fr", "http://localhost:3000"));
+        config.setAllowedOriginPatterns(List.of("http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000","http://*.univ-rouen.fr", "http://localhost:3000"));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
         config.setAllowCredentials(true);
