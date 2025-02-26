@@ -1,9 +1,9 @@
 import React from "react";
 import { BrowserRouter as Router, Routes, Route, Link } from "react-router-dom";
-import RegisterForm from "./components/Auth/RegisterForm.jsx";
-import Login from "./components/Auth/Login.jsx";
-import Home from "./pages/Home.jsx";
-import Dashboard from "./pages/Dashboard.jsx";
+import RegisterForm from "./components/Auth/RegisterForm.tsx";
+import Login from "./components/Auth/Login.tsx";
+import Home from "./pages/Home.tsx";
+import Dashboard from "./pages/Dashboard.tsx";
 
 function App() {
     return (

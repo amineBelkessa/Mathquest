@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "ES6",
+        "module": "ESNext",
+        "jsx": "react-jsx",
+        "strict": true,
+        "moduleResolution": "node",
+        "allowSyntheticDefaultImports": true,
+        "baseUrl": "src",  // ✅ Définit "src" comme racine des imports
+        "paths": {
+            "@/*": ["./*"]  // ✅ Permet d'utiliser "@/services/auth.service"
+        }
+    }
+}
