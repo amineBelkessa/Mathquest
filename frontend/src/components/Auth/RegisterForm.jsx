@@ -12,11 +12,12 @@ function RegisterForm() {
     const [error, setError] = useState("");
     const [showPassword, setShowPassword] = useState(false); // Pour afficher/masquer le mot de passe
     const navigate = useNavigate(); // Hook de navigation pour la redirection
+    const [role, setRole] = useState("élève"); // Par défaut : élève
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const token = await register(username, email, password);
+            const token = await register(username, email, password, role);
             localStorage.setItem("token", token);
             console.log("Inscription réussie, token =", token);
 
@@ -73,6 +74,14 @@ function RegisterForm() {
                             className="toggle-password"
                             onClick={() => setShowPassword(!showPassword)}
                         />
+                    </div>
+
+                    <div className="select-container">
+                        <label>Type de compte :</label>
+                        <select value={role} onChange={(e) => setRole(e.target.value)}>
+                            <option value="élève">Élève</option>
+                            <option value="parent">Parent</option>
+                        </select>
                     </div>
 
                     <button type="submit">S'inscrire</button>
