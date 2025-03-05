@@ -23,14 +23,14 @@ public class RegisterController {
         public String username;
         public String email;
         public String password;
+        public String role;
     }
 
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) throws Exception {
-        User user = userService.registerUser(request.username, request.email, request.password);
-        // Générer un token
-        String token = jwtUtils.generateToken(user.getEmail());
-        return token; // ou un objet JSON
+        userService.registerUser(request.username, request.email, request.password, request.role);
+        return "reussi"; // ou un objet JSON
     }
+
 }
