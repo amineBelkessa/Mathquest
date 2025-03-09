@@ -1,17 +1,17 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../../services/auth.service.ts";
+import { register } from "../../services/auth.service"; // ✅ Suppression du `.ts`
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faEnvelope, faLock, faEye, faEyeSlash, faChalkboardTeacher, faGraduationCap, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import "./Register.css";
 
-function RegisterForm() {
-    const [username, setUsername] = useState("");
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [role, setRole] = useState("eleve");
-    const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false);
+const RegisterForm: React.FC = () => {
+    const [username, setUsername] = useState<string>("");
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [role, setRole] = useState<string>("eleve");
+    const [error, setError] = useState<string>("");
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
@@ -95,6 +95,6 @@ function RegisterForm() {
             </div>
         </div>
     );
-}
+};
 
 export default RegisterForm;

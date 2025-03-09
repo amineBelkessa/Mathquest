@@ -1,45 +1,72 @@
 package com.mathquest.service;
 
+import com.mathquest.model.Eleve;
+import com.mathquest.model.Parent;
 import com.mathquest.model.User;
+import com.mathquest.repository.EleveRepository;
+import com.mathquest.repository.ParentRepository;
 import com.mathquest.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.data.mongodb.core.MongoTemplate;
+
 
 import java.util.Optional;
 
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final EleveRepository eleveRepository;
+    private final ParentRepository parentRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    
+    public UserService(EleveRepository eleveRepository, ParentRepository parentRepository) {
+        this.eleveRepository = eleveRepository;
+        this.parentRepository = parentRepository;
     }
 
     // Inscription
-    public User registerUser(String username, String email, String rawPassword) throws Exception {
-        if (userRepository.existsByEmail(email)) {
-            throw new Exception("Email déjà utilisé !");
+    public void registerUser(String username, String email, String rawPassword, String role) throws Exception {
+        System.out.println("🔹 Enregistrement de " + username + " avec le rôle " + role);
+
+        if (!role.equalsIgnoreCase("élève") && !role.equalsIgnoreCase("parent")) {
+            throw new Exception("❌ Rôle invalide !");
         }
-        if (userRepository.existsByUsername(username)) {
-            throw new Exception("Nom d'utilisateur déjà utilisé !");
-        }
+
         String hashedPassword = passwordEncoder.encode(rawPassword);
-        User user = new User(username, email, hashedPassword);
-        return userRepository.save(user);
+
+        if (role.equalsIgnoreCase("élève")) {
+            Eleve eleve = new Eleve(username, email, hashedPassword);
+            eleveRepository.save(eleve);
+            System.out.println("✅ Élève enregistré avec succès !");
+        } else {
+            Parent parent = new Parent(username, email, hashedPassword);
+            parentRepository.save(parent);
+            System.out.println("✅ Parent enregistré avec succès !");
+        }
     }
+
 
     // Connexion
     public User loginUser(String email, String password) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
-
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(password, user.getPassword())) { // Vérifie le mot de passe hashé
-                return user; // Authentification réussie
+        Optional<Eleve> eleveOptional = eleveRepository.findByEmail(email);
+        if (eleveOptional.isPresent()) {
+            Eleve eleve = eleveOptional.get();
+            if (passwordEncoder.matches(password, eleve.getPassword())) {
+                return eleve;
             }
         }
+
+        Optional<Parent> parentOptional = parentRepository.findByEmail(email);
+        if (parentOptional.isPresent()) {
+            Parent parent = parentOptional.get();
+            if (passwordEncoder.matches(password, parent.getPassword())) {
+                return parent;
+            }
+        }
+
         return null; // Échec d'authentification
     }
+
+
 }
