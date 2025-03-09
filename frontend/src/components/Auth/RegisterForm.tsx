@@ -78,10 +78,6 @@ const RegisterForm: React.FC = () => {
                             <FontAwesomeIcon icon={faGraduationCap} className="mr-2" />
                             <input type="radio" value="eleve" checked={role === "eleve"} onChange={() => setRole("eleve")} /> Élève
                         </label>
-                        <label className={`cursor-pointer ${role === "professeur" ? "text-indigo-600 font-bold" : ""}`}>
-                            <FontAwesomeIcon icon={faChalkboardTeacher} className="mr-2" />
-                            <input type="radio" value="professeur" checked={role === "professeur"} onChange={() => setRole("professeur")} /> Professeur
-                        </label>
                         <label className={`cursor-pointer ${role === "parent" ? "text-indigo-600 font-bold" : ""}`}>
                             <FontAwesomeIcon icon={faUserTie} className="mr-2" />
                             <input type="radio" value="parent" checked={role === "parent"} onChange={() => setRole("parent")} /> Parent
