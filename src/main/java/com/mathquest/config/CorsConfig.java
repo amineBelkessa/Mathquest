@@ -19,7 +19,7 @@ public class CorsConfig {
         config.setAllowedOriginPatterns(Arrays.asList(
                 "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000",
                 "http://*.univ-rouen.fr",
-                "http://localhost:*"
+                "http://localhost:3000"
         ));
 
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));

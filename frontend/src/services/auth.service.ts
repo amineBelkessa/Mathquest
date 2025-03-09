@@ -1,6 +1,6 @@
 // src/services/auth.service.ts
 
-const API_URL = "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:8080/api"; // URL du backend
+const API_URL = "http://localhost:8080/api"; // URL du backend en local
 
 export async function register(username: string, email: string, password: string): Promise<string> {
     const response = await fetch(API_URL + "/register", {

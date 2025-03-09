@@ -33,7 +33,7 @@ const Login: React.FC = () => {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Connexion</h2>
+                <h2>Connexion </h2>
                 {error && <p className="error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit}>

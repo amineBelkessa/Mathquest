@@ -1,28 +1,28 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
-import Header from "./components/Layout/Header";
-import Footer from "./components/Layout/Footer";
 // @ts-ignore
-import Home from "./pages/Home";
+import Header from "./components/Layout/Header.tsx";
 // @ts-ignore
-import LoginStudent from "./components/Auth/LoginStudent";
+import Home from "./pages/Home.tsx";
 // @ts-ignore
-import LoginTeacher from "./components/Auth/LoginTeacher";
+import Login from "./components/Auth/Login.tsx";
 // @ts-ignore
-import LoginParent from "./components/Auth/LoginParent";
-
+import RegisterForm from "./components/Auth/RegisterForm.tsx";
+// @ts-ignore
+import Footer from "./components/Layout/Footer.tsx";
 function App() {
     return (
         <Router>
-            <Header />
-            <main>
-                <Routes>
-                    <Route path="/" element={<Home />} />
-                    <Route path="/login-student" element={<LoginStudent />} />
-                    <Route path="/login-teacher" element={<LoginTeacher />} />
-                    <Route path="/login-parent" element={<LoginParent />} />
-                </Routes>
-            </main>
-            <Footer />
+            <div className="flex flex-col min-h-screen">
+                <Header />
+                <main className="flex-grow container mx-auto p-4">
+                    <Routes>
+                        <Route path="/" element={<Home />} />
+                        <Route path="/register" element={<RegisterForm />} />
+                        <Route path="/login" element={<Login />} />
+                    </Routes>
+                </main>
+                <Footer />
+            </div>
         </Router>
     );
 }

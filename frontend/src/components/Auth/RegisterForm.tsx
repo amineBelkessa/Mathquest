@@ -1,83 +1,96 @@
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom"; // Import de useNavigate
-// @ts-ignore
+import { useNavigate } from "react-router-dom";
 import { register } from "../../services/auth.service.ts";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser, faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
+import { faUser, faEnvelope, faLock, faEye, faEyeSlash, faChalkboardTeacher, faGraduationCap, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import "./Register.css";
 
 function RegisterForm() {
     const [username, setUsername] = useState("");
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [role, setRole] = useState("eleve");
     const [error, setError] = useState("");
-    const [showPassword, setShowPassword] = useState(false); // Pour afficher/masquer le mot de passe
-    const navigate = useNavigate(); // Hook de navigation pour la redirection
+    const [showPassword, setShowPassword] = useState(false);
+    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-
         e.preventDefault();
         try {
-            const token = await register(username, email, password);
+            const token = await register(username, email, password, role);
             localStorage.setItem("token", token);
             console.log("Inscription réussie, token =", token);
-
-            // Redirection vers /login après succès
-            navigate("/login");
+            navigate("/dashboard");
         } catch (err) {
-            setError("Email ou nom d'utilisateur déjà utilisé ");
+            setError("Inscription échouée. Veuillez réessayer.");
         }
     };
 
     return (
-        <div className="register-container">
-            <div className="register-box">
-                <h2>Inscription</h2>
-                {error && <p className="error-message">{error}</p>} {/* Affiche l'erreur sous forme de texte */}
-
-                <form onSubmit={handleSubmit}>
-                    {/* Champ Nom d'utilisateur avec icône */}
-                    <div className="input-container">
-                        <FontAwesomeIcon icon={faUser} className="icon" />
+        <div className="register-page flex items-center justify-center min-h-screen bg-gradient-to-r from-blue-700 via-purple-700 to-indigo-800 text-white">
+            <div className="register-box bg-white text-black p-10 rounded-2xl shadow-2xl w-96 flex flex-col items-center">
+                <h2 className="text-3xl font-extrabold mb-6 text-indigo-700">Rejoignez MathQuest</h2>
+                {error && <p className="text-red-500 mb-4">{error}</p>}
+                <form onSubmit={handleSubmit} className="w-full flex flex-col gap-4">
+                    <div className="relative">
+                        <FontAwesomeIcon icon={faUser} className="absolute left-3 top-3 text-gray-500" />
                         <input
                             type="text"
                             placeholder="Nom d'utilisateur"
                             value={username}
                             onChange={(e) => setUsername(e.target.value)}
                             required
+                            className="w-full pl-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
 
-                    {/* Champ Email avec icône */}
-                    <div className="input-container">
-                        <FontAwesomeIcon icon={faEnvelope} className="icon" />
+                    <div className="relative">
+                        <FontAwesomeIcon icon={faEnvelope} className="absolute left-3 top-3 text-gray-500" />
                         <input
                             type="email"
                             placeholder="Email"
                             value={email}
                             onChange={(e) => setEmail(e.target.value)}
                             required
+                            className="w-full pl-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                         />
                     </div>
 
-                    {/* Champ Mot de passe avec icône et visibilité */}
-                    <div className="input-container">
-                        <FontAwesomeIcon icon={faLock} className="icon" />
+                    <div className="relative">
+                        <FontAwesomeIcon icon={faLock} className="absolute left-3 top-3 text-gray-500" />
                         <input
                             type={showPassword ? "text" : "password"}
                             placeholder="Mot de passe"
                             value={password}
                             onChange={(e) => setPassword(e.target.value)}
                             required
+                            className="w-full pl-10 py-2 border rounded-md shadow-sm focus:ring-2 focus:ring-indigo-500"
                         />
                         <FontAwesomeIcon
                             icon={showPassword ? faEyeSlash : faEye}
-                            className="toggle-password"
+                            className="absolute right-3 top-3 text-gray-500 cursor-pointer"
                             onClick={() => setShowPassword(!showPassword)}
                         />
                     </div>
 
-                    <button type="submit">S'inscrire</button>
+                    <div className="flex justify-between mt-2">
+                        <label className={`cursor-pointer ${role === "eleve" ? "text-indigo-600 font-bold" : ""}`}>
+                            <FontAwesomeIcon icon={faGraduationCap} className="mr-2" />
+                            <input type="radio" value="eleve" checked={role === "eleve"} onChange={() => setRole("eleve")} /> Élève
+                        </label>
+                        <label className={`cursor-pointer ${role === "professeur" ? "text-indigo-600 font-bold" : ""}`}>
+                            <FontAwesomeIcon icon={faChalkboardTeacher} className="mr-2" />
+                            <input type="radio" value="professeur" checked={role === "professeur"} onChange={() => setRole("professeur")} /> Professeur
+                        </label>
+                        <label className={`cursor-pointer ${role === "parent" ? "text-indigo-600 font-bold" : ""}`}>
+                            <FontAwesomeIcon icon={faUserTie} className="mr-2" />
+                            <input type="radio" value="parent" checked={role === "parent"} onChange={() => setRole("parent")} /> Parent
+                        </label>
+                    </div>
+
+                    <button type="submit" className="mt-4 bg-indigo-600 text-white py-2 rounded-lg hover:bg-indigo-800 transition">
+                        S'inscrire 🚀
+                    </button>
                 </form>
             </div>
         </div>

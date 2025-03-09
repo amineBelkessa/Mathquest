@@ -1,6 +1,6 @@
 import React, { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
-import { login } from "../services/auth.service"; // ⚠️ Assurez-vous que ce fichier est en .ts ou .d.ts
+import { login } from "../services/auth.service";
 
 const LoginPage: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -42,7 +42,7 @@ const LoginPage: React.FC = () => {
                     style={{ width: "100%", padding: "10px", margin: "5px 0" }}
                 />
                 <button type="submit" style={{ width: "100%", padding: "10px", background: "blue", color: "white", border: "none", cursor: "pointer" }}>
-                    Se connecter
+                    Se connecter baak
                 </button>
             </form>
         </div>
