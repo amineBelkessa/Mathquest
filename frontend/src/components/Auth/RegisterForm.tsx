@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { register } from "../../services/auth.service"; // ✅ Suppression du `.ts`
+import { register } from "../../services/auth.service.ts"; // ✅ Suppression du `.ts`
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser, faEnvelope, faLock, faEye, faEyeSlash, faChalkboardTeacher, faGraduationCap, faUserTie } from "@fortawesome/free-solid-svg-icons";
 import "./Register.css";
