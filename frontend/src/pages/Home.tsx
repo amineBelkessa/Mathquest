@@ -1,10 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import {FaBrain, FaChartLine, FaGamepad} from "react-icons/fa6";
+
 
 
 
 export default function Home() {
+
     return (
         <div className="min-h-screen bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-500 flex flex-col items-center justify-center text-white">
             {/* Header */}
@@ -33,18 +34,17 @@ export default function Home() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
                 <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
-                    <FaGamepad className="text-6xl text-blue-500 mb-4" />
+
 
                     <h2 className="text-2xl font-bold">🎮 Jeux interactifs</h2>
                     <p className="mt-2 text-gray-700">Apprenez en vous amusant avec des mini-jeux captivants.</p>
                 </div>
                 <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
-                    <FaBrain className="text-6xl text-green-500 mb-4" />
+
                     <h2 className="text-2xl font-bold">🧠 Quiz intelligents</h2>
                     <p className="mt-2 text-gray-700">Testez vos connaissances et améliorez votre logique.</p>
                 </div>
                 <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
-                    <FaChartLine className="text-6xl text-red-500 mb-4" />
                     <h2 className="text-2xl font-bold">📈 Progression suivie</h2>
                     <p className="mt-2 text-gray-700">Suivez vos progrès et débloquez de nouveaux niveaux.</p>
                 </div>
