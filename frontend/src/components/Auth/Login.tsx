@@ -1,19 +1,21 @@
 import { useState } from "react";
-import { login } from "../../services/auth.service";
+// @ts-ignore
+import { login } from "../../services/auth.service.ts";
 import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
-import "./Login.css";
+import "../../assets/styles/Login.css";
+import React from "react";
 
-const Login = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const [loading, setLoading] = useState(false);
-    const [showPassword, setShowPassword] = useState(false); // État pour afficher/masquer le password
+const Login: React.FC = () => {
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<string>("");
+    const [loading, setLoading] = useState<boolean>(false);
+    const [showPassword, setShowPassword] = useState<boolean>(false);
     const navigate = useNavigate();
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // ✅ Correction ici
         e.preventDefault();
         setError("");
         setLoading(true);
@@ -32,7 +34,7 @@ const Login = () => {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Connexion</h2>
+                <h2>Connexion </h2>
                 {error && <p className="error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit}>

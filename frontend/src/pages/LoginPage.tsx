@@ -1,20 +1,21 @@
-import React, { useState } from "react";
+import React, { useState, FormEvent } from "react";
 import { useNavigate } from "react-router-dom";
 import { login } from "../services/auth.service";
 
-const LoginPage = () => {
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [error, setError] = useState("");
-    const navigate = useNavigate(); // Pour rediriger après connexion
+const LoginPage: React.FC = () => {
+    const [email, setEmail] = useState<string>("");
+    const [password, setPassword] = useState<string>("");
+    const [error, setError] = useState<string>("");
+    const navigate = useNavigate();
 
-    const handleLogin = async (e) => {
+
+    const handleLogin = async (e: FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
 
         try {
             await login(email, password);
-            navigate("/dashboard"); // Redirection après succès
+            navigate("/dashboard");
         } catch (err) {
             setError("Email ou mot de passe incorrect !");
         }
@@ -42,7 +43,7 @@ const LoginPage = () => {
                     style={{ width: "100%", padding: "10px", margin: "5px 0" }}
                 />
                 <button type="submit" style={{ width: "100%", padding: "10px", background: "blue", color: "white", border: "none", cursor: "pointer" }}>
-                    Se connecter
+                    Se connecter baak
                 </button>
             </form>
         </div>

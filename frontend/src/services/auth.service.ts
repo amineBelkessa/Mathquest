@@ -1,10 +1,7 @@
-// src/services/auth.service.js
+const API_URL = "http://localhost:8080/api"; // URL du backend
 
-const API_URL = "http://localhost:8080/api";
- // URL du backend
-
-export async function register(username, email, password, role) {
-    const response = await fetch(API_URL + "/register", {
+export async function register(username: string, email: string, password: string, role: string): Promise<string> {
+    const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -19,9 +16,8 @@ export async function register(username, email, password, role) {
     return response.text(); // Retourne le token si l'inscription réussit
 }
 
-
-export async function login(email, password) {
-    const response = await fetch(API_URL + "/login", {
+export async function login(email: string, password: string): Promise<string> {
+    const response = await fetch(`${API_URL}/login`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
@@ -29,7 +25,7 @@ export async function login(email, password) {
         body: JSON.stringify({ email, password }),
     });
 
-    const data = await response.text();  // ✅ Use text(), NOT json()
+    const data = await response.text(); // ✅ Utilisation de text() au lieu de json()
 
     if (!response.ok) {
         throw new Error("Identifiants incorrects");
@@ -39,8 +35,6 @@ export async function login(email, password) {
     return data;
 }
 
-
-
-export function logout() {
+export function logout(): void {
     localStorage.removeItem("user");
 }

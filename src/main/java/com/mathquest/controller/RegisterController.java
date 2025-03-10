@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-
 public class RegisterController {
 
     private final UserService userService;
@@ -26,11 +25,10 @@ public class RegisterController {
         public String role;
     }
 
-
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) throws Exception {
+        System.out.println("🔹 Tentative d'inscription : " + request.email + " | Role: " + request.role); // ✅ Log pour debug
         userService.registerUser(request.username, request.email, request.password, request.role);
-        return "reussi"; // ou un objet JSON
+        return "Inscription réussie";
     }
-
 }

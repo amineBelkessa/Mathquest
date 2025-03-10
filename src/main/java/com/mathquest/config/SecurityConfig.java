@@ -25,8 +25,8 @@ public class SecurityConfig {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource())) // Configuration CORS
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(new AntPathRequestMatcher("/register")).permitAll()
-                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll() // Autoriser API
+                        .requestMatchers(new AntPathRequestMatcher("/api/register")).permitAll() // ✅ Ajout explicite de "/api/register"
+                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll() // Autoriser les autres endpoints API
                         .anyRequest().authenticated()
                 );
 
@@ -36,14 +36,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of("http://srv-dpi-proj-mathquest-test.univ-rouen.fr:3000","http://*.univ-rouen.fr", "http://localhost:3000"));
+        config.setAllowedOriginPatterns(List.of(
+                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000",
+                "http://*.univ-rouen.fr",
+                "http://localhost:3000"
+        ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Access-Control-Allow-Origin")); // ✅ Ajout du header
         config.setAllowCredentials(true);
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
-
 }
