@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/styles/Login.css";
+import React from "react";
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");

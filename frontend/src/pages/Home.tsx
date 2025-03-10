@@ -1,8 +1,11 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { FaGamepad, FaBrain, FaChartLine } from "react-icons/fa";
+import {FaBrain, FaChartLine, FaGamepad} from "react-icons/fa";
+
+
 
 export default function Home() {
+    // @ts-ignore
     return (
         <div className="min-h-screen bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-500 flex flex-col items-center justify-center text-white">
             {/* Header */}
@@ -29,10 +32,10 @@ export default function Home() {
                 </div>
             </section>
 
-            {/* Feature Cards */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12">
                 <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
                     <FaGamepad className="text-6xl text-blue-500 mb-4" />
+
                     <h2 className="text-2xl font-bold">🎮 Jeux interactifs</h2>
                     <p className="mt-2 text-gray-700">Apprenez en vous amusant avec des mini-jeux captivants.</p>
                 </div>
