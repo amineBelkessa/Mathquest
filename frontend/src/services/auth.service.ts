@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:8080/api"; // URL du backend
+const API_URL = "http://10.130.163.148:5000/api"; // URL du backend
 
 export async function register(username: string, email: string, password: string, role: string): Promise<string> {
     const response = await fetch(`${API_URL}/register`, {
