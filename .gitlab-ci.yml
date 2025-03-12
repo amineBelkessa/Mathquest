@@ -64,7 +64,9 @@ deploy:
     - |
       sshpass -p "mathquest76" ssh -o StrictHostKeyChecking=no administrateur@10.130.163.148 << 'EOF'
       cd mathquest
-      git pull
+      git fetch
+      git checkout dev
+      git pull origin dev
       echo "mathquest76" | sudo -S docker-compose down
       echo "mathquest76" | sudo -S docker-compose up --build -d
       EOF
