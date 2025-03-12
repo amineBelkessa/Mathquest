@@ -39,7 +39,8 @@ public class SecurityConfig {
         config.setAllowedOriginPatterns(List.of(
                 "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000",
                 "http://*.univ-rouen.fr",
-                "http://localhost:3000"
+                "http://localhost:3000",
+                "http://10.130.163.148:5000"
         ));
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Access-Control-Allow-Origin")); // ✅ Ajout du header

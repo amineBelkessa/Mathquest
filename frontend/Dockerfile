@@ -1,5 +1,5 @@
-# Use Node.js as the base image for building the frontend
-FROM node:18-alpine AS build
+# Use Node.js 20 as the base image for building the frontend
+FROM node:20-alpine AS build
 
 WORKDIR /app
 COPY package.json package-lock.json ./
@@ -7,8 +7,8 @@ RUN npm install
 COPY . .
 RUN npm run build
 
-# Use Node.js to serve the built frontend
-FROM node:18-alpine
+# Use Node.js 20 to serve the built frontend
+FROM node:20-alpine
 
 WORKDIR /app
 COPY --from=build /app/build /app/build
