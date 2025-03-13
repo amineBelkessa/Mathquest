@@ -1,7 +1,6 @@
 import { useState } from "react";
 // @ts-ignore
 import { login } from "../../services/auth.service.ts";
-import { useNavigate } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/styles/Login.css";
@@ -13,7 +12,7 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const navigate = useNavigate();
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // ✅ Correction ici
         e.preventDefault();
@@ -34,7 +33,7 @@ const Login: React.FC = () => {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Connexion </h2>
+                <h2>Connexion à MathQuest </h2>
                 {error && <p className="error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
@@ -68,7 +67,7 @@ const Login: React.FC = () => {
                     </div>
 
                     <button type="submit" disabled={loading}>
-                        {loading ? "Connexion..." : "Se connecter"}
+                        {loading ? "Connexion..." : "Se connecter ☄️"}
                     </button>
                 </form>
             </div>

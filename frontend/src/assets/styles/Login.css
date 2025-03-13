@@ -1,68 +1,97 @@
+/* Icône pour afficher/masquer le mot de passe */
+.input-container .toggle-password {
+    position: absolute;
+    right: 12px; /* Ajusté pour mieux centrer dans l'input */
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    color: #777;
+    font-size: 16px;
+    padding: 5px; /* Ajout pour éviter qu'il touche les bords */
+}
+
+.input-container {
+    position: relative;
+    margin: 15px 0;
+}
+
+/* Ajustement du padding des inputs pour laisser de la place à l'œil */
+.input-container input {
+    width: 100%;
+    padding: 12px 40px 12px 40px; /* Ajout d'espace à droite pour l'icône */
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 16px;
+    box-sizing: border-box;
+}
+
 /* Conteneur principal */
 .login-container {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100vh;
-    background: linear-gradient(135deg, #74ebd5, #acb6e5);
+    background: linear-gradient(to right, #1e3a8a, #7c3aed, #4f46e5); /* Même fond que Register */
     padding: 20px;
+
 }
 
 /* Boîte du formulaire */
 .login-box {
     background: white;
-    padding: 2rem;
-    border-radius: 10px;
+    padding: 2.5rem;
+    border-radius: 15px;
     box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2);
     width: 100%;
-    max-width: 350px;
+    max-width: 400px; /* Harmonisé avec Register.css */
     text-align: center;
 }
 
 /* Titre */
 .login-box h2 {
+    font-size: 2rem;
+    font-weight: 800;
+    color: #333; /* Même couleur que Register */
     margin-bottom: 20px;
-    color: #333;
 }
 
 /* Conteneur des champs */
 .input-container {
     position: relative;
-    margin: 10px 0;
+    margin: 15px 0;
 }
 
 /* Champs input avec icône */
 .input-container input {
     width: 100%;
-    padding: 12px 40px 12px 40px; /* ✅ Ajout d'espace pour l'icône droite */
+    padding: 12px 10px 12px 40px;
     border: 1px solid #ccc;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
     box-sizing: border-box;
 }
 
-/* Icône de gauche (email, verrou) */
+/* Icônes */
 .input-container .icon {
     position: absolute;
-    left: 12px;
+    left: 15px;
     top: 50%;
     transform: translateY(-50%);
     color: #777;
 }
 
-/* Icône afficher/masquer le mot de passe (à droite) */
+/* Icône pour afficher/masquer le mot de passe */
 .input-container .toggle-password {
     position: absolute;
-    right: 12px; /* ✅ Placé à droite */
+    right: 15px;
     top: 50%;
     transform: translateY(-50%);
     cursor: pointer;
-    color: #555;
-    font-size: 18px;
+    color: #777;
 }
 
 .input-container .toggle-password:hover {
-    color: #007bff;
+    color: #4f46e5;
 }
 
 /* Bouton */
@@ -70,24 +99,25 @@
     width: 100%;
     padding: 12px;
     margin-top: 10px;
-    background-color: #007bff;
+    background-color: #2563eb; /* Même bleu que Register */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     font-size: 16px;
+    font-weight: bold;
     cursor: pointer;
     transition: 0.3s;
 }
 
 .login-box button:hover {
-    background-color: #0056b3;
+    background-color: #1e40af;
 }
 
 /* Adaptation pour petits écrans */
 @media (max-width: 400px) {
     .login-box {
         width: 90%;
-        padding: 1.5rem;
+        padding: 2rem;
     }
 }
 
@@ -102,38 +132,3 @@
     border-radius: 5px;
     border: 1px solid red;
 }
-.login-container {
-    max-width: 400px;
-    margin: 50px auto;
-    padding: 20px;
-    background: #f4f4f4;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-
-.login-container h2 {
-    text-align: center;
-    margin-bottom: 20px;
-}
-
-.login-container input {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-}
-
-.login-container button {
-    width: 100%;
-    padding: 10px;
-    background: #3b5998;
-    color: white;
-    border: none;
-    cursor: pointer;
-}
-
-.login-container button:hover {
-    background: #2a4887;
-}
-
