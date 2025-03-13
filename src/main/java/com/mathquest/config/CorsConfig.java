@@ -18,7 +18,8 @@ public class CorsConfig {
         config.setAllowCredentials(true);
         config.setAllowedOriginPatterns(Arrays.asList(
                 "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000",
-                "http://*.univ-rouen.fr",
+                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:5000",
+                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr",
                 "http://localhost:3000",
                 "http://10.130.163.148:5000"
         ));
