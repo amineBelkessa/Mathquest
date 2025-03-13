@@ -64,9 +64,14 @@ deploy:
     - |
       sshpass -p "mathquest76" ssh -o StrictHostKeyChecking=no administrateur@10.130.163.148 << 'EOF'
       cd mathquest
-      git fetch
       git checkout dev
-      git pull origin dev
+      # Fetch all changes from the remote
+      git fetch --all
+      # Reset the local dev branch to match the remote
+      git reset --hard origin/dev
+      # Clean up any untracked files
+      git clean -fd
+      # Rebuild and restart Docker containers
       echo "mathquest76" | sudo -S docker-compose down
       echo "mathquest76" | sudo -S docker-compose up --build -d
       EOF
