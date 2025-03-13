@@ -36,19 +36,17 @@ public class SecurityConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration config = new CorsConfiguration();
-        config.setAllowedOriginPatterns(List.of(
-                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:3000",
-                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr:5000",
-                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr",
-                "http://localhost:3000",
-                "http://10.130.163.148:5000"
-        ));
+
+        // Allow all origins (Nginx will enforce the correct ones)
+        config.addAllowedOriginPattern("*");
+
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
-        config.setAllowedHeaders(List.of("Authorization", "Content-Type", "Access-Control-Allow-Origin")); // ✅ Ajout du header
-        config.setAllowCredentials(true);
+        config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
+        config.setAllowCredentials(true); // Keep credentials enabled
 
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         source.registerCorsConfiguration("/**", config);
         return source;
     }
+
 }
