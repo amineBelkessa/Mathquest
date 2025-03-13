@@ -9,6 +9,8 @@ import Login from "./components/Auth/Login.tsx";
 import RegisterForm from "./components/Auth/RegisterForm.tsx";
 // @ts-ignore
 import Footer from "./components/Layout/Footer.tsx";
+import React from "react";
+
 function App() {
     return (
         <Router>
