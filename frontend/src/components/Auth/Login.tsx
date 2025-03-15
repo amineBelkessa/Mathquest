@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/styles/Login.css";
 import React from "react";
+import { useNavigate } from "react-router-dom";  // ✅ Importer useNavigate
+
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -12,7 +14,7 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
-
+    const navigate = useNavigate(); // ✅ Hook pour rediriger
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // ✅ Correction ici
         e.preventDefault();
@@ -22,7 +24,7 @@ const Login: React.FC = () => {
         try {
             await login(email, password);
             console.log("Connexion réussie !");
-            window.alert("Connexion réussie !");
+            navigate("/");
         } catch (err) {
             setError("Email ou mot de passe incorrect !");
         } finally {

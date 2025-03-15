@@ -1,7 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import { getUser, logout } from "../../services/auth.service";
 
 const Header = () => {
+    const navigate = useNavigate();
+    const user = getUser();
+    const handleLogout = () => {
+        logout();
+        navigate("/login");
+    };
     return (
         <header className="bg-white shadow-md">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -34,11 +42,29 @@ const Header = () => {
 
                 {/* BOUTONS LOGIN / REGISTER */}
                 <div className="hidden md:flex space-x-4">
-                    <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition ">Connexion</Link>
-                    <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
-                        S'inscrire
-                    </Link>
-                </div>
+                {user?.username ? (
+                    <div className="flex items-center space-x-4">
+                            <span className="font-medium text-gray-700">
+                                {user.username} ({user.role === "eleve" ? "Élève" : "Parent"})
+                            </span>
+                        <button
+                            onClick={handleLogout}
+                            className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition"
+                        >
+                            Déconnexion
+                        </button>
+                    </div>
+                ) : (
+                    <>
+                        <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                            Connexion
+                        </Link>
+                        <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                            S'inscrire
+                        </Link>
+                    </>
+                )}
+            </div>
 
                 {/* MOBILE MENU */}
                 <button className="md:hidden text-gray-700 focus:outline-none">
