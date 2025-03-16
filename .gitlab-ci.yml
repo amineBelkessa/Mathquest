@@ -96,12 +96,25 @@ deploy:
     - main
     - dev
   before_script:
-    - apt-get update && apt-get install -y sshpass
+    - export CI_ENVIRONMENT_FILE="/tmp/ci_env_file"  # Ensure the variable is set
+    - |  
+      if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+      echo "Using development profile";
+      echo "FRONTEND_PROFILE=test" >> $CI_ENVIRONMENT_FILE;
+      echo "BACKEND_PROFILE=test" >> $CI_ENVIRONMENT_FILE;
+      echo "IP_SERVER=10.130.163.142" >> $CI_ENVIRONMENT_FILE;
+      elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+      echo "Using production profile";
+      echo "FRONTEND_PROFILE=prod" >> $CI_ENVIRONMENT_FILE;
+      echo "BACKEND_PROFILE=prod" >> $CI_ENVIRONMENT_FILE;
+      echo "IP_SERVER=10.130.163.148" >> $CI_ENVIRONMENT_FILE;
+      fi
+    - cat $CI_ENVIRONMENT_FILE  # Check if variables are written correctly
+    - source $CI_ENVIRONMENT_FILE
   script:
+    - echo "Deploying to server ($IP_SERVER)..."
     - |
-      source $CI_ENVIRONMENT_FILE
-      echo "Deploying to server ($IP_SERVER)..."
-      sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << EOF
+      sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << 'EOF'
       cd mathquest
       git checkout $CI_COMMIT_BRANCH
       git fetch --all
@@ -112,3 +125,4 @@ deploy:
       EOF
   environment:
     name: $CI_COMMIT_BRANCH
+
