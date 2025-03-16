@@ -1,7 +1,8 @@
----
 stages:
   - build
   - test
+  - deploy
+
 
 # Build du backend (Spring Boot & Java 21)
 build_backend:
@@ -49,3 +50,26 @@ test_frontend:
     - npm test -- --watchAll=false --passWithNoTests --verbose
   allow_failure: false
 
+deploy:
+  stage: deploy
+  image: debian:bullseye
+  services:
+    - docker:20.10.16-dind
+  only:
+    - main
+  before_script:
+    - apt-get update && apt-get install -y sshpass
+  script:
+    - echo "Deploying to server..."
+    - |
+      sshpass -p "mathquest76" ssh -o StrictHostKeyChecking=no administrateur@10.130.163.148 << 'EOF'
+      cd mathquest
+      git checkout main
+      git fetch --all
+      git reset --hard origin/dev
+      git clean -fd
+      echo "mathquest76" | sudo -S docker-compose down
+      echo "mathquest76" | sudo -S docker-compose up --build -d
+      EOF
+  environment:
+    name: production
