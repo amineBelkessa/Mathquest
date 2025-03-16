@@ -45,7 +45,7 @@ const Header = () => {
                 {user?.username ? (
                     <div className="flex items-center space-x-4">
                             <span className="font-medium text-gray-700">
-                                {user.username} ({user.role === "eleve" ? "Élève" : "Parent"})
+                                {user.username} ({user.role})
                             </span>
                         <button
                             onClick={handleLogout}
