@@ -1,40 +1,75 @@
+variables:
+  FRONTEND_PROFILE: "default"
+  BACKEND_PROFILE: "default"
+  IP_SERVER: "default"
+  SSH_PASSWORD: "mathquest76"
+
+before_script:
+  - export CI_ENVIRONMENT_FILE="/tmp/ci_env_file"
+  - |
+    echo "CI_COMMIT_BRANCH: $CI_COMMIT_BRANCH"
+    if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+      echo "Using development profile"
+      FRONTEND_PROFILE="test"
+      BACKEND_PROFILE="test"
+      IP_SERVER="10.130.163.142"
+    elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+      echo "Using production profile"
+      FRONTEND_PROFILE="prod"
+      BACKEND_PROFILE="prod"
+      IP_SERVER="10.130.163.148"
+    fi
+    echo "FRONTEND_PROFILE=$FRONTEND_PROFILE" >> $CI_ENVIRONMENT_FILE
+    echo "BACKEND_PROFILE=$BACKEND_PROFILE" >> $CI_ENVIRONMENT_FILE
+    echo "IP_SERVER=$IP_SERVER" >> $CI_ENVIRONMENT_FILE
+    cat $CI_ENVIRONMENT_FILE
+
+
 stages:
   - build
   - test
   - deploy
 
-# Build du backend (Spring Boot & Java 21)
+# Build backend with profile
 build_backend:
   stage: build
   image: maven:3.9.6-eclipse-temurin-21
   variables:
-    MAVEN_OPTS: "-Dfile.encoding=UTF-8"  # Force l'encodage UTF-8
+    MAVEN_OPTS: "-Dfile.encoding=UTF-8"
   script:
-    - mvn clean package -DskipTests -Dfile.encoding=UTF-8
+    - |
+      source $CI_ENVIRONMENT_FILE
+      echo "Building backend with profile: $BACKEND_PROFILE"
+      mvn clean package -DskipTests -Dfile.encoding=UTF-8 -P$BACKEND_PROFILE
   artifacts:
     paths:
       - target/*.jar
 
-# Build du frontend (React 18)
+# Build frontend with profile
 build_frontend:
   stage: build
   image: node:20
   script:
-    - cd frontend
-    - npm install
-    - CI='' npm run build
+    - |
+      source $CI_ENVIRONMENT_FILE
+      echo "Building frontend with profile: $FRONTEND_PROFILE"
+      cd frontend
+      npm install
+      npm run build:$FRONTEND_PROFILE || npm run build
   artifacts:
     paths:
       - frontend/build/
 
-# Tests backend
+# Backend tests
 test_backend:
   stage: test
   image: maven:3.9.6-eclipse-temurin-21
   script:
-    - mvn test -X
+    - |
+      source $CI_ENVIRONMENT_FILE
+      mvn test -X -P$BACKEND_PROFILE
 
-# Tests frontend
+# Frontend tests
 test_frontend:
   stage: test
   image: node:20
@@ -43,12 +78,15 @@ test_frontend:
     paths:
       - frontend/node_modules
   script:
-    - echo "➡️ Exécution des tests frontend..."
-    - cd frontend
-    - npm install
-    - npm test -- --watchAll=false --passWithNoTests --verbose
+    - |
+      source $CI_ENVIRONMENT_FILE
+      echo "➡️ Running frontend tests..."
+      cd frontend
+      npm install
+      npm test -- --watchAll=false --passWithNoTests --verbose
   allow_failure: false
 
+# Deployment
 deploy:
   stage: deploy
   image: debian:bullseye
@@ -56,19 +94,36 @@ deploy:
     - docker:20.10.16-dind
   only:
     - main
+    - dev
   before_script:
     - apt-get update && apt-get install -y sshpass
+    - export CI_ENVIRONMENT_FILE="/tmp/ci_env_file"  # Ensure the variable is set
+    - |  
+      if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+      echo "Using development profile";
+      echo "FRONTEND_PROFILE=test" >> $CI_ENVIRONMENT_FILE;
+      echo "BACKEND_PROFILE=test" >> $CI_ENVIRONMENT_FILE;
+      echo "IP_SERVER=10.130.163.142" >> $CI_ENVIRONMENT_FILE;
+      elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+      echo "Using production profile";
+      echo "FRONTEND_PROFILE=prod" >> $CI_ENVIRONMENT_FILE;
+      echo "BACKEND_PROFILE=prod" >> $CI_ENVIRONMENT_FILE;
+      echo "IP_SERVER=10.130.163.148" >> $CI_ENVIRONMENT_FILE;
+      fi
+    - cat $CI_ENVIRONMENT_FILE  # Check if variables are written correctly
+    - source $CI_ENVIRONMENT_FILE
   script:
-    - echo "Deploying to server..."
+    - echo "Deploying to server ($IP_SERVER)..."
     - |
-      sshpass -p "mathquest76" ssh -o StrictHostKeyChecking=no administrateur@10.130.163.148 << 'EOF'
+      sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << 'EOF'
       cd mathquest
-      git checkout main
+      git checkout $CI_COMMIT_BRANCH
       git fetch --all
-      git reset --hard origin/main
+      git reset --hard origin/$CI_COMMIT_BRANCH
       git clean -fd
-      echo "mathquest76" | sudo -S docker-compose down
-      echo "mathquest76" | sudo -S docker-compose up --build -d
+      echo "$SSH_PASSWORD" | sudo -S docker-compose down
+      echo "$SSH_PASSWORD" | sudo -S docker-compose up --build -d
       EOF
   environment:
-    name: production
+    name: $CI_COMMIT_BRANCH
+

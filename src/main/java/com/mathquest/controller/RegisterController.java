@@ -7,7 +7,6 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api")
-
 public class RegisterController {
 
     private final UserService userService;
@@ -23,14 +22,13 @@ public class RegisterController {
         public String username;
         public String email;
         public String password;
+        public String role;
     }
-
 
     @PostMapping("/register")
     public String register(@RequestBody RegisterRequest request) throws Exception {
-        User user = userService.registerUser(request.username, request.email, request.password);
-        // Générer un token
-        String token = jwtUtils.generateToken(user.getEmail());
-        return token; // ou un objet JSON
+        System.out.println("🔹 Tentative d'inscription : " + request.email + " | Role: " + request.role); // ✅ Log pour debug
+        userService.registerUser(request.username, request.email, request.password, request.role);
+        return "Inscription réussie";
     }
 }

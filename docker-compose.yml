@@ -4,7 +4,7 @@ services:
   backend:
     build: .
     ports:
-      - "8080:8080"
+      - "8080:8080"  # Expose Spring Boot backend on port 8080
     environment:
       SPRING_DATA_MONGODB_URI: mongodb+srv://elhathout75:mathquestdatabasepw76@cluster0.vb61x.mongodb.net/utlisateurs?tls=true
     networks:

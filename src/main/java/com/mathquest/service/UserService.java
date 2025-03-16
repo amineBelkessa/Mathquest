@@ -1,6 +1,12 @@
 package com.mathquest.service;
 
+import com.mathquest.model.Admin;
+import com.mathquest.model.Eleve;
+import com.mathquest.model.Parent;
 import com.mathquest.model.User;
+import com.mathquest.repository.AdminRepository;
+import com.mathquest.repository.EleveRepository;
+import com.mathquest.repository.ParentRepository;
 import com.mathquest.repository.UserRepository;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -10,36 +16,76 @@ import java.util.Optional;
 @Service
 public class UserService {
 
-    private final UserRepository userRepository;
+    private final EleveRepository eleveRepository;
+    private final ParentRepository parentRepository;
+    private final AdminRepository adminRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
+    public UserService(EleveRepository eleveRepository, ParentRepository parentRepository, AdminRepository adminRepository) {
+        this.eleveRepository = eleveRepository;
+        this.parentRepository = parentRepository;
+        this.adminRepository = adminRepository;
     }
 
-    // Inscription
-    public User registerUser(String username, String email, String rawPassword) throws Exception {
-        if (userRepository.existsByEmail(email)) {
-            throw new Exception("Email déjà utilisé !");
+    // 🔹 Inscription
+    public void registerUser(String username, String email, String rawPassword, String role) throws Exception {
+        System.out.println("🔹 Tentative d'inscription : " + username + " | Email: " + email + " | Rôle: " + role);
+
+        // Correction : Vérification correcte des rôles
+        if (!role.equalsIgnoreCase("eleve") && !role.equalsIgnoreCase("parent")) {
+            throw new Exception("❌ Rôle invalide !");
         }
-        if (userRepository.existsByUsername(username)) {
-            throw new Exception("Nom d'utilisateur déjà utilisé !");
+
+        // Vérifier si l'email existe déjà
+        if (eleveRepository.findByEmail(email).isPresent() || parentRepository.findByEmail(email).isPresent()) {
+            throw new Exception("❌ Cet email est déjà utilisé !");
         }
+
         String hashedPassword = passwordEncoder.encode(rawPassword);
-        User user = new User(username, email, hashedPassword);
-        return userRepository.save(user);
+
+        if (role.equalsIgnoreCase("eleve")) {
+            Eleve eleve = new Eleve(username, email, hashedPassword);
+            eleveRepository.save(eleve);
+            System.out.println("✅ Élève enregistré avec succès !");
+        } else {
+            Parent parent = new Parent(username, email, hashedPassword);
+            parentRepository.save(parent);
+            System.out.println("✅ Parent enregistré avec succès !");
+        }
     }
 
-    // Connexion
+    // 🔹 Connexion
     public User loginUser(String email, String password) {
-        Optional<User> userOptional = userRepository.findByEmail(email);
+        System.out.println("🔹 Tentative de connexion pour : " + email);
 
-        if (userOptional.isPresent()) {
-            User user = userOptional.get();
-            if (passwordEncoder.matches(password, user.getPassword())) { // Vérifie le mot de passe hashé
-                return user; // Authentification réussie
+        Optional<Eleve> eleveOptional = eleveRepository.findByEmail(email);
+        if (eleveOptional.isPresent()) {
+            Eleve eleve = eleveOptional.get();
+            if (passwordEncoder.matches(password, eleve.getPassword())) {
+                System.out.println("✅ Connexion réussie en tant qu'élève !");
+                return eleve;
             }
         }
+
+        Optional<Parent> parentOptional = parentRepository.findByEmail(email);
+        if (parentOptional.isPresent()) {
+            Parent parent = parentOptional.get();
+            if (passwordEncoder.matches(password, parent.getPassword())) {
+                System.out.println("✅ Connexion réussie en tant que parent !");
+                return parent;
+            }
+        }
+
+        Optional<Admin> adminOptional = adminRepository.findByEmail(email);
+        if (adminOptional.isPresent()) {
+            Admin admin = adminOptional.get();
+            if (passwordEncoder.matches(password, admin.getPassword())) {
+                System.out.println("✅ Connexion réussie en tant qu'admin !");
+                return admin;
+            }
+        }
+
+        System.out.println("❌ Échec de connexion : email ou mot de passe incorrect !");
         return null; // Échec d'authentification
     }
 }

@@ -1,11 +1,17 @@
 package com.mathquest.controller;
 
+import com.mathquest.model.Admin;
+import com.mathquest.model.Eleve;
+import com.mathquest.model.Parent;
 import com.mathquest.model.User;
 import com.mathquest.service.UserService;
 import com.mathquest.util.JwtUtils;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api")
@@ -33,6 +39,11 @@ public class LoginController {
         }
 
         String token = jwtUtils.generateToken(user.getEmail());
-        return ResponseEntity.ok(token); // Retourne le token JWT
+        Map<String, Object> response = new HashMap<>();
+        response.put("token", token);
+        response.put("username", user.getUsername());
+        response.put("role", user instanceof Eleve ? "eleve" : (user instanceof Parent ? "parent" : (user instanceof Admin ? "admin" : "inconnu")));
+
+        return ResponseEntity.ok(response);
     }
 }
