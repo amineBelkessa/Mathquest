@@ -98,7 +98,8 @@ deploy:
   before_script:
     - export CI_ENVIRONMENT_FILE="/tmp/ci_env_file"  # Ensure the variable is set
     - echo "CI_COMMIT_BRANCH: $CI_COMMIT_BRANCH"
-    - if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+    - |  
+      if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
       echo "Using development profile";
       echo "FRONTEND_PROFILE=test" >> $CI_ENVIRONMENT_FILE;
       echo "BACKEND_PROFILE=test" >> $CI_ENVIRONMENT_FILE;
