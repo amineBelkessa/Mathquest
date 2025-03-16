@@ -1,7 +1,7 @@
----
 stages:
   - build
   - test
+  - deploy
 
 # Build du backend (Spring Boot & Java 21)
 build_backend:
