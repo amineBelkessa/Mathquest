@@ -1,8 +1,10 @@
 package com.mathquest.service;
 
+import com.mathquest.model.Admin;
 import com.mathquest.model.Eleve;
 import com.mathquest.model.Parent;
 import com.mathquest.model.User;
+import com.mathquest.repository.AdminRepository;
 import com.mathquest.repository.EleveRepository;
 import com.mathquest.repository.ParentRepository;
 import com.mathquest.repository.UserRepository;
@@ -16,11 +18,13 @@ public class UserService {
 
     private final EleveRepository eleveRepository;
     private final ParentRepository parentRepository;
+    private final AdminRepository adminRepository;
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public UserService(EleveRepository eleveRepository, ParentRepository parentRepository) {
+    public UserService(EleveRepository eleveRepository, ParentRepository parentRepository, AdminRepository adminRepository) {
         this.eleveRepository = eleveRepository;
         this.parentRepository = parentRepository;
+        this.adminRepository = adminRepository;
     }
 
     // 🔹 Inscription
@@ -69,6 +73,15 @@ public class UserService {
             if (passwordEncoder.matches(password, parent.getPassword())) {
                 System.out.println("✅ Connexion réussie en tant que parent !");
                 return parent;
+            }
+        }
+
+        Optional<Admin> adminOptional = adminRepository.findByEmail(email);
+        if (adminOptional.isPresent()) {
+            Admin admin = adminOptional.get();
+            if (passwordEncoder.matches(password, admin.getPassword())) {
+                System.out.println("✅ Connexion réussie en tant qu'admin !");
+                return admin;
             }
         }
 

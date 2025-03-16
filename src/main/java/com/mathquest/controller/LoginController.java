@@ -1,6 +1,8 @@
 package com.mathquest.controller;
 
+import com.mathquest.model.Admin;
 import com.mathquest.model.Eleve;
+import com.mathquest.model.Parent;
 import com.mathquest.model.User;
 import com.mathquest.service.UserService;
 import com.mathquest.util.JwtUtils;
@@ -40,7 +42,7 @@ public class LoginController {
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("username", user.getUsername());
-        response.put("role", user instanceof Eleve ? "eleve" : "parent");
+        response.put("role", user instanceof Eleve ? "eleve" : (user instanceof Parent ? "parent" : (user instanceof Admin ? "admin" : "inconnu")));
 
         return ResponseEntity.ok(response);
     }
