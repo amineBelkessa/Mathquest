@@ -5,6 +5,7 @@ variables:
   SSH_PASSWORD: "mathquest76"
 
 before_script:
+  - export CI_ENVIRONMENT_FILE="/tmp/ci_env_file"
   - |
     echo "CI_COMMIT_BRANCH: $CI_COMMIT_BRANCH"
     if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
@@ -22,6 +23,7 @@ before_script:
     echo "BACKEND_PROFILE=$BACKEND_PROFILE" >> $CI_ENVIRONMENT_FILE
     echo "IP_SERVER=$IP_SERVER" >> $CI_ENVIRONMENT_FILE
     cat $CI_ENVIRONMENT_FILE
+
 
 stages:
   - build
