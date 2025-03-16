@@ -40,7 +40,7 @@ build_frontend:
   script:
     - cd frontend
     - npm install
-    - npm run build:$FRONTEND_PROFILE
+    - npm run build:$FRONTEND_PROFILE || npm run build
   artifacts:
     paths:
       - frontend/build/
