@@ -1,41 +1,58 @@
+variables:
+  FRONTEND_PROFILE: "default"
+  BACKEND_PROFILE: "default"
+  IP_SERVER: "default"
+  SSH_PASSWORD: "mathquest76"
+
+before_script:
+  - |
+    if [[ "$CI_COMMIT_BRANCH" == "dev" ]]; then
+      export FRONTEND_PROFILE="test"
+      export BACKEND_PROFILE="test"
+      export IP_SERVER="10.130.163.142"
+    elif [[ "$CI_COMMIT_BRANCH" == "main" ]]; then
+      export FRONTEND_PROFILE="prod"
+      export BACKEND_PROFILE="prod"
+      export IP_SERVER="10.130.163.148"
+    fi
+
 stages:
   - build
   - test
   - deploy
 
-
-# Build du backend (Spring Boot & Java 21)
+# Build backend with profile
 build_backend:
   stage: build
   image: maven:3.9.6-eclipse-temurin-21
   variables:
-    MAVEN_OPTS: "-Dfile.encoding=UTF-8"  # Force l'encodage UTF-8
+    MAVEN_OPTS: "-Dfile.encoding=UTF-8"
   script:
-    - mvn clean package -DskipTests -Dfile.encoding=UTF-8
+    - mvn clean package -DskipTests -Dfile.encoding=UTF-8 -P$BACKEND_PROFILE
   artifacts:
     paths:
       - target/*.jar
 
-# Build du frontend (React 18)
+# Build frontend with profile
 build_frontend:
   stage: build
   image: node:20
   script:
     - cd frontend
     - npm install
-    - CI='' npm run build
+    - npm run build:$FRONTEND_PROFILE || npm run build
   artifacts:
     paths:
       - frontend/build/
 
-# Tests backend
+# Backend tests
 test_backend:
   stage: test
   image: maven:3.9.6-eclipse-temurin-21
   script:
-    - mvn test -X
+    - mvn test -X -P$BACKEND_PROFILE
 
-# Tests frontend
+# Frontend tests
 test_frontend:
   stage: test
   image: node:20
@@ -44,36 +61,34 @@ test_frontend:
     paths:
       - frontend/node_modules
   script:
-    - echo "➡️ Exécution des tests frontend..."
+    - echo "➡️ Running frontend tests..."
     - cd frontend
     - npm install
     - npm test -- --watchAll=false --passWithNoTests --verbose
   allow_failure: false
 
+# Deployment
 deploy:
   stage: deploy
   image: debian:bullseye
   services:
     - docker:20.10.16-dind
   only:
+    - main
     - dev
   before_script:
     - apt-get update && apt-get install -y sshpass
   script:
-    - echo "Deploying to server..."
+    - echo "Deploying to server ($IP_SERVER)..."
     - |
-      sshpass -p "mathquest76" ssh -o StrictHostKeyChecking=no administrateur@10.130.163.148 << 'EOF'
+      sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << 'EOF'
       cd mathquest
-      git checkout dev
-      # Fetch all changes from the remote
+      git checkout $CI_COMMIT_BRANCH
       git fetch --all
-      # Reset the local dev branch to match the remote
-      git reset --hard origin/dev
-      # Clean up any untracked files
+      git reset --hard origin/$CI_COMMIT_BRANCH
       git clean -fd
-      # Rebuild and restart Docker containers
-      echo "mathquest76" | sudo -S docker-compose down
-      echo "mathquest76" | sudo -S docker-compose up --build -d
+      echo "$SSH_PASSWORD" | sudo -S docker-compose down
+      echo "$SSH_PASSWORD" | sudo -S docker-compose up --build -d
       EOF
   environment:
-    name: production
+    name: $CI_COMMIT_BRANCH
