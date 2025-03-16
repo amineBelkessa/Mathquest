@@ -35,9 +35,10 @@ build_backend:
   variables:
     MAVEN_OPTS: "-Dfile.encoding=UTF-8"
   script:
-    - source $CI_ENVIRONMENT_FILE
-    - echo "Building backend with profile: $BACKEND_PROFILE"
-    - mvn clean package -DskipTests -Dfile.encoding=UTF-8 -P$BACKEND_PROFILE
+    - |
+      source $CI_ENVIRONMENT_FILE
+      echo "Building backend with profile: $BACKEND_PROFILE"
+      mvn clean package -DskipTests -Dfile.encoding=UTF-8 -P$BACKEND_PROFILE
   artifacts:
     paths:
       - target/*.jar
@@ -47,11 +48,12 @@ build_frontend:
   stage: build
   image: node:20
   script:
-    - source $CI_ENVIRONMENT_FILE
-    - echo "Building frontend with profile: $FRONTEND_PROFILE"
-    - cd frontend
-    - npm install
-    - npm run build:$FRONTEND_PROFILE || npm run build
+    - |
+      source $CI_ENVIRONMENT_FILE
+      echo "Building frontend with profile: $FRONTEND_PROFILE"
+      cd frontend
+      npm install
+      npm run build:$FRONTEND_PROFILE || npm run build
   artifacts:
     paths:
       - frontend/build/
@@ -61,8 +63,9 @@ test_backend:
   stage: test
   image: maven:3.9.6-eclipse-temurin-21
   script:
-    - source $CI_ENVIRONMENT_FILE
-    - mvn test -X -P$BACKEND_PROFILE
+    - |
+      source $CI_ENVIRONMENT_FILE
+      mvn test -X -P$BACKEND_PROFILE
 
 # Frontend tests
 test_frontend:
@@ -73,11 +76,12 @@ test_frontend:
     paths:
       - frontend/node_modules
   script:
-    - source $CI_ENVIRONMENT_FILE
-    - echo "➡️ Running frontend tests..."
-    - cd frontend
-    - npm install
-    - npm test -- --watchAll=false --passWithNoTests --verbose
+    - |
+      source $CI_ENVIRONMENT_FILE
+      echo "➡️ Running frontend tests..."
+      cd frontend
+      npm install
+      npm test -- --watchAll=false --passWithNoTests --verbose
   allow_failure: false
 
 # Deployment
@@ -92,9 +96,9 @@ deploy:
   before_script:
     - apt-get update && apt-get install -y sshpass
   script:
-    - source $CI_ENVIRONMENT_FILE
-    - echo "Deploying to server ($IP_SERVER)..."
     - |
+      source $CI_ENVIRONMENT_FILE
+      echo "Deploying to server ($IP_SERVER)..."
       sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << EOF
       cd mathquest
       git checkout $CI_COMMIT_BRANCH
