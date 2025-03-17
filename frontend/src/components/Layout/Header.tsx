@@ -1,15 +1,27 @@
 import React from "react";
-import { Link } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUser, logout } from "../../services/auth.service";
 
 const Header = () => {
     const navigate = useNavigate();
-    const user = getUser();
+    const user = getUser(); // ✅ Récupère l'utilisateur connecté
+
     const handleLogout = () => {
         logout();
         navigate("/login");
     };
+
+    // ✅ Gère l'accès aux exercices
+    const handleConsulterExercices = () => {
+        if (!user) {
+            navigate("/login", { state: { from: "/consulter-exercices" } }); // ✅ Redirige vers login en sauvegardant la page d'origine
+        } else if (user.role === "eleve") {
+            navigate("/consulter-exercices");
+        } else {
+            alert("Seuls les élèves peuvent accéder aux exercices !");
+        }
+    };
+
     return (
         <header className="bg-white shadow-md">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
@@ -28,6 +40,13 @@ const Header = () => {
                     <Link to="/shop" className="hover:text-blue-500">Shop</Link>
                 </nav>
 
+                {/* BOUTON CONSULTER EXERCICES */}
+                <button
+                    onClick={handleConsulterExercices}
+                    className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition">
+                    Consulter Exercices
+                </button>
+
                 {/* BARRE DE RECHERCHE */}
                 <div className="relative hidden md:block">
                     <input
@@ -42,29 +61,29 @@ const Header = () => {
 
                 {/* BOUTONS LOGIN / REGISTER */}
                 <div className="hidden md:flex space-x-4">
-                {user?.username ? (
-                    <div className="flex items-center space-x-4">
+                    {user?.username ? (
+                        <div className="flex items-center space-x-4">
                             <span className="font-medium text-gray-700">
                                 {user.username} ({user.role})
                             </span>
-                        <button
-                            onClick={handleLogout}
-                            className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition"
-                        >
-                            Déconnexion
-                        </button>
-                    </div>
-                ) : (
-                    <>
-                        <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
-                            Connexion
-                        </Link>
-                        <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
-                            S'inscrire
-                        </Link>
-                    </>
-                )}
-            </div>
+                            <button
+                                onClick={handleLogout}
+                                className="bg-red-500 text-white px-4 py-2 rounded-full hover:bg-red-600 transition"
+                            >
+                                Déconnexion
+                            </button>
+                        </div>
+                    ) : (
+                        <>
+                            <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                                Connexion
+                            </Link>
+                            <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                                S'inscrire
+                            </Link>
+                        </>
+                    )}
+                </div>
 
                 {/* MOBILE MENU */}
                 <button className="md:hidden text-gray-700 focus:outline-none">
