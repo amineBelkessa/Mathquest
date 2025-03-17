@@ -9,6 +9,11 @@ import Login from "./components/Auth/Login.tsx";
 import RegisterForm from "./components/Auth/RegisterForm.tsx";
 // @ts-ignore
 import Footer from "./components/Layout/Footer.tsx";
+// @ts-ignore
+import ConsulterExercices from "./pages/ConsulterExercices.tsx";
+// @ts-ignore
+import RealiserExercice from "./pages/RealiserExercice.tsx";
+
 import React from "react";
 
 function App() {
@@ -22,6 +27,8 @@ function App() {
                         <Route path="/" element={<Home />} />
                         <Route path="/register" element={<RegisterForm />} />
                         <Route path="/login" element={<Login />} />
+                        <Route path="/consulter-exercices" element={<ConsulterExercices />} />
+                        <Route path="/realiser-exercice/:id" element={<RealiserExercice />} />
                     </Routes>
                 </main>
                 <Footer />

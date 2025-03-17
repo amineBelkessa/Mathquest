@@ -26,7 +26,8 @@ public class SecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers(new AntPathRequestMatcher("/api/register")).permitAll() // ✅ Ajout explicite de "/api/register"
-                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll() // Autoriser les autres endpoints API
+                        .requestMatchers(new AntPathRequestMatcher("/api/**")).permitAll()// Autoriser les autres endpoints API
+                        .requestMatchers(new AntPathRequestMatcher("/api/submissions/**")).permitAll()
                         .anyRequest().authenticated()
                 );
 
