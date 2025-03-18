@@ -1,10 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import {getUser} from "../services/auth.service";
 
 
 
 
 export default function Home() {
+    const user = getUser();
 
     return (
         <div className="min-h-screen bg-gradient-to-r from-cyan-500 via-teal-500 to-blue-500 flex flex-col items-center justify-center text-white">
@@ -23,12 +25,21 @@ export default function Home() {
                 </p>
 
                 <div className="mt-6 space-x-4 flex">
-                    <Link to="/login" className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow-lg hover:bg-yellow-500 transition">
-                        Se connecter
-                    </Link>
-                    <Link to="/register" className="px-6 py-3 bg-green-400 text-black font-semibold rounded-lg shadow-lg hover:bg-green-500 transition">
-                        S'inscrire
-                    </Link>
+                    {user?.role === "admin" ? (
+                        <Link to="/admin/utilisateurs" className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-lg hover:bg-red-600 transition">
+                            📋 Gérer les élèves
+                        </Link>
+                    ) : (
+                        // ✅ Sinon, afficher les boutons de connexion et d'inscription
+                        <>
+                            <Link to="/login" className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow-lg hover:bg-yellow-500 transition">
+                                Se connecter
+                            </Link>
+                            <Link to="/register" className="px-6 py-3 bg-green-400 text-black font-semibold rounded-lg shadow-lg hover:bg-green-500 transition">
+                                S'inscrire
+                            </Link>
+                        </>
+                    )}
                 </div>
             </section>
 

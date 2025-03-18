@@ -5,8 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/styles/Login.css";
 import React from "react";
-import { useNavigate } from "react-router-dom";  // ✅ Importer useNavigate
-
+import { useNavigate, useLocation } from "react-router-dom"; // ✅ Importer useLocation
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -14,17 +13,25 @@ const Login: React.FC = () => {
     const [error, setError] = useState<string>("");
     const [loading, setLoading] = useState<boolean>(false);
     const [showPassword, setShowPassword] = useState<boolean>(false);
-    const navigate = useNavigate(); // ✅ Hook pour rediriger
 
-    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => { // ✅ Correction ici
+    const navigate = useNavigate();
+    const location = useLocation(); // ✅ Récupère la page précédente avant connexion
+
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError("");
         setLoading(true);
 
         try {
-            await login(email, password);
-            console.log("Connexion réussie !");
-            navigate("/");
+            const user = await login(email, password); // ✅ Récupère l'utilisateur après connexion
+            console.log("Connexion réussie !", user);
+
+            // ✅ Si l'utilisateur venait de "Consulter Exercices" et qu'il est un élève
+            if (location.state?.from === "/consulter-exercices" && user.role === "eleve") {
+                navigate("/consulter-exercices");
+            } else {
+                navigate("/"); // ✅ Sinon, il est redirigé vers l'accueil
+            }
         } catch (err) {
             setError("Email ou mot de passe incorrect !");
         } finally {
