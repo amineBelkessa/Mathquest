@@ -21,7 +21,7 @@ export async function register(username: string, email: string, password: string
 export const login = async (email: string, password: string) => {
     try {
         const response = await axios.post(`${API_URL}/login`, { email, password });
-
+        console.log("📌 Réponse du backend lors de la connexion :", response.data); // ✅ Vérification
         if (response.data.token && response.data.username && response.data.role) {
             localStorage.setItem("token", response.data.token); // ✅ Stocke uniquement le token
             localStorage.setItem("user", JSON.stringify({ username: response.data.username, role: response.data.role })); // ✅ Stocke user séparément
