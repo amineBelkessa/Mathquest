@@ -11,7 +11,7 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    @Bean
+    /*@Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
@@ -25,5 +25,5 @@ public class CorsConfig {
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }
+    }*/
 }
