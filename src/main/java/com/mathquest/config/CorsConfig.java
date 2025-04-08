@@ -11,19 +11,20 @@ import java.util.List;
 @Configuration
 public class CorsConfig {
 
-    /*@Bean
+    @Bean
     public CorsFilter corsFilter() {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // Allow all origins, but Nginx will handle restricting them
-        config.addAllowedOriginPattern("*");
+        config.addAllowedOriginPattern("http://localhost:3000");
+        config.addAllowedOriginPattern("http://srv-dpi-proj-mathquest-test.univ-rouen.fr");
+        config.addAllowedOriginPattern("http://srv-dpi-proj-mathquest-prod.univ-rouen.fr");
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true); // Keep credentials enabled
+        config.setAllowCredentials(true);
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
-    }*/
+    }
 }
