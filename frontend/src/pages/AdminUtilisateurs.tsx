@@ -30,7 +30,7 @@ const AdminUtilisateurs: React.FC = () => {
     return (
         <div className="container mx-auto p-6">
             <h1 className="text-3xl font-bold mb-4">Liste des utilisateurs</h1>
-            <p className="text-gray-700 mb-4">📌 Pour l’instant, seuls les élèves sont affichés. À l'avenir, on ajoutera les parents et les admins.</p>
+            <p className="text-gray-700 mb-4">📌 Pour l’instant, seuls les élèves sont affichés. À l'avenir, on ajoutera les parents et les profs.</p>
 
             <table className="w-full border-collapse border border-gray-300">
                 <thead>
