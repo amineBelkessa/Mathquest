@@ -56,7 +56,7 @@ public class UserService {
 
     // 🔹 Connexion
     public User loginUser(String email, String password) {
-        System.out.println("🔹 Tentative de connexion pour : " + email);
+        System.out.println("Nouveau log et, tentative de co reussie : " + email);
 
         Optional<Eleve> eleveOptional = eleveRepository.findByEmail(email);
         if (eleveOptional.isPresent()) {

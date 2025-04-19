@@ -16,12 +16,13 @@ public class CorsConfig {
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
         CorsConfiguration config = new CorsConfiguration();
 
-        // Allow all origins, but Nginx will handle restricting them
-        config.addAllowedOriginPattern("*");
+        config.addAllowedOrigin("http://localhost:3000");
+        config.addAllowedOrigin("http://srv-dpi-proj-mathquest-test.univ-rouen.fr");
+        config.addAllowedOrigin("http://srv-dpi-proj-mathquest-prod.univ-rouen.fr");
 
         config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         config.setAllowedHeaders(List.of("Authorization", "Content-Type"));
-        config.setAllowCredentials(true); // Keep credentials enabled
+        config.setAllowCredentials(true);
 
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);

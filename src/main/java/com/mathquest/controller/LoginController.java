@@ -43,7 +43,7 @@ public class LoginController {
         response.put("token", token);
         response.put("username", user.getUsername());
         response.put("role", user instanceof Eleve ? "eleve" : (user instanceof Parent ? "parent" : (user instanceof Admin ? "admin" : "inconnu")));
-
+        response.put("version", "🔥 BACKEND V2");
         return ResponseEntity.ok(response);
     }
 }
