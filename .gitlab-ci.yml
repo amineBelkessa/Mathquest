@@ -115,18 +115,21 @@ deploy:
   script:
     - echo "Deploying to server ($IP_SERVER)..."
     - |
-      sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << 'EOF'
+      sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << EOF
+      echo "$SSH_PASSWORD" | sudo -S bash << EOS
       cd mathquest
       git checkout $CI_COMMIT_BRANCH
       git fetch
       git pull
       git clean -fd
       mvn clean package
-      echo "$SSH_PASSWORD" | sudo -S docker-compose down --rmi all --volumes --remove-orphans
-      echo "$SSH_PASSWORD" | sudo -S docker-compose build --no-cache
-      echo "$SSH_PASSWORD" | sudo -S docker-compose up -d
-      echo "$SSH_PASSWORD" | sudo -S systemctl restart nginx
+      docker-compose down --rmi all --volumes --remove-orphans
+      docker-compose build --no-cache
+      docker-compose up -d
+      systemctl restart nginx
+      EOS
       EOF
+
   environment:
     name: $CI_COMMIT_BRANCH
 
