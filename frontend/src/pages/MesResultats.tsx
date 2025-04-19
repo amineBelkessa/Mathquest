@@ -31,7 +31,7 @@ const MesResultats: React.FC = () => {
         }
 
         axios
-            .get(`http://localhost:8080/api/submissions/results/${user.username}`)
+            .get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/submissions/results/${user.username}`)
             .then((res) => {
                 const rawResults: SubmissionResult[] = res.data;
 
