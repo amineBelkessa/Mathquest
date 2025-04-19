@@ -4,22 +4,11 @@ import { getUser, logout } from "../../services/auth.service";
 
 const Header = () => {
     const navigate = useNavigate();
-    const user = getUser(); // ✅ Récupère l'utilisateur connecté
+    const user = getUser();
 
     const handleLogout = () => {
         logout();
-        navigate("/login");
-    };
-
-    // ✅ Gère l'accès aux exercices
-    const handleConsulterExercices = () => {
-        if (!user) {
-            navigate("/login", { state: { from: "/consulter-exercices" } }); // ✅ Redirige vers login en sauvegardant la page d'origine
-        } else if (user.role === "eleve") {
-            navigate("/consulter-exercices");
-        } else {
-            alert("Seuls les élèves peuvent accéder aux exercices !");
-        }
+        navigate("/"); // ✅ Redirection vers la page d’accueil
     };
 
     return (
@@ -40,13 +29,6 @@ const Header = () => {
                     <Link to="/shop" className="hover:text-blue-500">Shop</Link>
                 </nav>
 
-                {/* BOUTON CONSULTER EXERCICES */}
-                <button
-                    onClick={handleConsulterExercices}
-                    className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition">
-                    Consulter Exercices
-                </button>
-
                 {/* BARRE DE RECHERCHE */}
                 <div className="relative hidden md:block">
                     <input
@@ -59,7 +41,7 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* BOUTONS LOGIN / REGISTER */}
+                {/* BOUTONS LOGIN / REGISTER ou UTILISATEUR CONNECTÉ */}
                 <div className="hidden md:flex space-x-4">
                     {user?.username ? (
                         <div className="flex items-center space-x-4">

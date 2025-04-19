@@ -5,6 +5,7 @@ import com.mathquest.service.SubmissionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.mathquest.dto.SubmissionResultDTO;
 
 import java.util.List;
 
@@ -36,5 +37,11 @@ public class SubmissionController {
     public ResponseEntity<List<Submission>> getUserSubmissions(@PathVariable String username) {
         List<Submission> submissions = submissionService.getSubmissionsByUsername(username);
         return ResponseEntity.ok(submissions);
+    }
+
+    @GetMapping("/results/{username}")
+    public ResponseEntity<List<SubmissionResultDTO>> getResults(@PathVariable String username) {
+        List<SubmissionResultDTO> results = submissionService.getSubmissionResultsForUser(username);
+        return ResponseEntity.ok(results);
     }
 }
