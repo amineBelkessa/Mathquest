@@ -33,10 +33,9 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        System.out.println("🔥TEST TEST TEST TEST TEST TEST\n\n\nTEST TEST TEST TEST TEST TEST");
         User user = userService.loginUser(request.email, request.password);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou MDP pas correct mon reuf");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect !");
         }
 
         String token = jwtUtils.generateToken(user.getEmail());
