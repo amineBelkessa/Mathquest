@@ -37,6 +37,8 @@ import ResultatsEleve from "./pages/ResultatsEleve.tsx";
 // Auth utils
 import { getUser } from "./services/auth.service";
 
+import Classement from "./pages/Classement";
+
 const AppContent: React.FC = () => {
     const [user, setUser] = useState<any | null>(null);
     const location = useLocation();
@@ -84,6 +86,7 @@ const AppContent: React.FC = () => {
                         path="/eleve/mes-resultats"
                         element={user?.role === "eleve" ? <MesResultats /> : <Navigate to="/" />}
                     />
+                    <Route path="/eleve/classement" element={<Classement/>}/>
 
                     {/* 🔹 Espace Enseignant */}
                     <Route
