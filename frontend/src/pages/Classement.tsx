@@ -43,7 +43,7 @@ const Leaderboard = () => {
     return (
         <div className="max-w-4xl mx-auto p-6 bg-white rounded-lg shadow-md">
             <h2 className="text-3xl font-bold mb-6 text-center text-blue-600">
-                🏆 Classement des Champions 🏆
+                🏆 Classement des Champions de MathQuest 🏆
             </h2>
 
             <div className="grid grid-cols-12 gap-4 font-semibold mb-4 px-4">
