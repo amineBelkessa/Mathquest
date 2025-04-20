@@ -11,7 +11,7 @@ const DashboardEnseignant: React.FC = () => {
             description: "Ajoutez des questions, des réponses et publiez un nouvel exercice.",
             icon: "📝",
             color: "bg-indigo-100 text-indigo-700",
-            action: () => navigate("/creer-exercice"),
+            action: () => navigate("/enseignant/creer-exercice"), // ✅ Correction ici
         },
         {
             title: "Créer une salle",
@@ -44,7 +44,7 @@ const DashboardEnseignant: React.FC = () => {
                 transition={{ duration: 0.5 }}
                 className="text-4xl font-extrabold text-center text-indigo-800 mb-12 tracking-tight"
             >
-                👨‍🏫 Tableau de bord  <span className="text-indigo-600">Enseignant</span> 👩‍🏫
+                👨‍🏫 Tableau de bord <span className="text-indigo-600">Enseignant</span> 👩‍🏫
             </motion.h2>
 
             <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-10">
