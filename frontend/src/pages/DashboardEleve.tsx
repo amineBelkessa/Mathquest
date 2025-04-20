@@ -52,6 +52,18 @@ const DashboardEleve = () => {
                             Voir mes résultats
                         </button>
                     </div>
+
+                    {/* 3. Classement */}
+                    <div className={cardStyle}>
+                        <h2 className="text-2xl font-bold mb-2">🥇 Classement</h2>
+                        <p className="text-gray-700 mb-6">Regarde ton classement parmis les élèves et ton badge !</p>
+                        <button
+                            onClick={() => navigate("/eleve/classement")}
+                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow"
+                        >
+                            Voir le classement
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
