@@ -28,12 +28,12 @@ public class UserService {
         System.out.println("🔹 Tentative d'inscription : " + username + " | Email: " + email + " | Rôle: " + role);
 
         // Correction : Vérification correcte des rôles
-        if (!role.equalsIgnoreCase("eleve") && !role.equalsIgnoreCase("parent")) {
+        if (!role.equalsIgnoreCase("eleve") && !role.equalsIgnoreCase("parent") && !role.equalsIgnoreCase("admin") && !role.equalsIgnoreCase("enseignant")) {
             throw new Exception("❌ Rôle invalide !");
         }
 
         // Vérifier si l'email existe déjà
-        if (eleveRepository.findByEmail(email).isPresent() || parentRepository.findByEmail(email).isPresent()) {
+        if (eleveRepository.findByEmail(email).isPresent() || parentRepository.findByEmail(email).isPresent() || adminRepository.findByEmail(email).isPresent() || enseignantRepository.findByEmail(email).isPresent()) {
             throw new Exception("❌ Cet email est déjà utilisé !");
         }
 
@@ -43,10 +43,19 @@ public class UserService {
             Eleve eleve = new Eleve(username, email, hashedPassword);
             eleveRepository.save(eleve);
             System.out.println("✅ Élève enregistré avec succès !");
-        } else {
+        } else if (role.equalsIgnoreCase("parent")) {
             Parent parent = new Parent(username, email, hashedPassword);
             parentRepository.save(parent);
             System.out.println("✅ Parent enregistré avec succès !");
+        } else if (role.equalsIgnoreCase("admin")) {
+            Admin admin = new Admin(username, email, hashedPassword);
+            adminRepository.save(admin);
+            System.out.println("✅ Admin enregistré avec succès !");
+        } else {
+            Enseignant enseignant = new Enseignant(username, email, hashedPassword);
+            enseignantRepository.save(enseignant);
+            System.out.println("✅ Enseignant enregistré avec succès !");
+
         }
     }
 
