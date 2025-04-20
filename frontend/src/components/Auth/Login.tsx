@@ -1,12 +1,7 @@
 import React, { useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-    faEnvelope,
-    faLock,
-    faEye,
-    faEyeSlash
-} from "@fortawesome/free-solid-svg-icons";
+import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 // @ts-ignore
 import { login } from "../../services/auth.service.ts";
 import "../../assets/styles/Login.css";
@@ -30,23 +25,19 @@ const Login: React.FC = () => {
             const user = await login(email, password);
             console.log("✅ Connexion réussie :", user);
 
-            // 🔐 Stockage utilisateur si nécessaire
-            localStorage.setItem("user", JSON.stringify(user));
-
-            // 🧭 Redirection intelligente selon le rôle
-            const role = user?.role?.toLowerCase();
-            const redirectFrom = location.state?.from;
-
-            if (role === "eleve") {
-                if (redirectFrom === "/consulter-exercices") {
+            // 🔁 Redirection intelligente selon le rôle
+            if (user.role === "eleve") {
+                if (location.state?.from === "/consulter-exercices") {
                     navigate("/consulter-exercices");
                 } else {
                     navigate("/eleve/dashboard");
                 }
-            } else if (role === "admin") {
+            } else if (user.role === "enseignant") {
+                navigate("/enseignant/dashboard");
+            } else if (user.role === "admin") {
                 navigate("/admin/utilisateurs");
             } else {
-                navigate("/"); // Page d'accueil par défaut
+                navigate("/");
             }
 
         } catch (err) {
@@ -61,11 +52,10 @@ const Login: React.FC = () => {
         <div className="login-container">
             <div className="login-box">
                 <h2>Connexion à MathQuest</h2>
-
                 {error && <p className="error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
-                    {/* 🔹 Email */}
+                    {/* Champ Email avec icône */}
                     <div className="input-container">
                         <FontAwesomeIcon icon={faEnvelope} className="icon" />
                         <input
@@ -77,7 +67,7 @@ const Login: React.FC = () => {
                         />
                     </div>
 
-                    {/* 🔐 Mot de passe */}
+                    {/* Champ Mot de passe avec icône et visibilité */}
                     <div className="input-container">
                         <FontAwesomeIcon icon={faLock} className="icon" />
                         <input
@@ -95,7 +85,7 @@ const Login: React.FC = () => {
                     </div>
 
                     <button type="submit" disabled={loading}>
-                        {loading ? "Connexion..." : "Se connecter ☄️"}
+                        {loading ? "Connexion..." : "Se connecter"}
                     </button>
                 </form>
             </div>
