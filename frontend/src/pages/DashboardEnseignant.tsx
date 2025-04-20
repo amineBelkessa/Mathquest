@@ -11,28 +11,28 @@ const DashboardEnseignant: React.FC = () => {
             description: "Ajoutez des questions, des réponses et publiez un nouvel exercice.",
             icon: "📝",
             color: "bg-indigo-100 text-indigo-700",
-            action: () => navigate("/enseignant/creer-exercice"), // ✅ Correction ici
+            action: () => navigate("/enseignant/creer-exercice"),
         },
         {
             title: "Créer une salle",
             description: "Générez un code que les élèves pourront utiliser pour rejoindre.",
             icon: "🏫",
             color: "bg-yellow-100 text-yellow-700",
-            action: () => navigate("/creer-salle"),
+            action: () => navigate("/enseignant/creer-salle"), // 🟨 tu devras créer cette route si elle n'existe pas
         },
         {
             title: "Résultats des élèves",
             description: "Consultez les soumissions, scores et progrès des élèves.",
             icon: "📊",
             color: "bg-green-100 text-green-700",
-            action: () => navigate("/resultats-eleves"),
+            action: () => navigate("/enseignant/eleves"), // ✅ redirige vers ListeEleves
         },
         {
             title: "Statistiques globales",
             description: "Obtenez des statistiques globales sur la performance des élèves.",
             icon: "📈",
             color: "bg-pink-100 text-pink-700",
-            action: () => navigate("/statistiques"),
+            action: () => navigate("/enseignant/statistiques"), // 🟨 à créer aussi plus tard
         },
     ];
 
