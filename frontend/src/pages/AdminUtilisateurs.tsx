@@ -48,7 +48,7 @@ const AdminUtilisateurs: React.FC = () => {
                             <td className="border border-gray-300 px-4 py-2">{eleve.email}</td>
                             <td className="border border-gray-300 px-4 py-2 text-center">
                                 <button
-                                    onClick={() => handleDelete(eleve._id)}
+                                    onClick={() => handleDelete(eleve.id)}
                                     className="bg-red-500 text-white px-3 py-1 rounded hover:bg-red-600 transition"
                                 >
                                     🗑 Supprimer
