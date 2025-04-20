@@ -2,8 +2,7 @@ import React, { useState } from "react";
 import { register } from "../../services/auth.service";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-    faUser, faEnvelope, faLock, faEye, faEyeSlash,
-    faGraduationCap, faUserTie, faChalkboardTeacher, faShieldAlt
+    faUser, faEnvelope, faLock, faEye, faEyeSlash
 } from "@fortawesome/free-solid-svg-icons";
 import "../Auth/Register.css";
 
