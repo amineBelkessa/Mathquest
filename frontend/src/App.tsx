@@ -16,6 +16,10 @@ import RealiserExercice from "./pages/RealiserExercice";
 
 // Admin
 import AdminUtilisateurs from "./pages/AdminUtilisateurs";
+import AdminDashboard from "./pages/AdminDashboard";
+import CreerCompte from "./components/admin/CreerCompte";
+
+
 
 // Élèves
 import DashboardEleve from "./pages/DashboardEleve";
@@ -55,6 +59,8 @@ const AppContent: React.FC = () => {
                                 <Navigate to="/eleve/dashboard" />
                             ) : user?.role === "enseignant" ? (
                                 <Navigate to="/enseignant/dashboard" />
+                            ) : user?.role === "admin" ? (
+                                <Navigate to="/admin/dashboard" />
                             ) : (
                                 <Home />
                             )
@@ -102,6 +108,16 @@ const AppContent: React.FC = () => {
                         path="/admin/utilisateurs"
                         element={user?.role === "admin" ? <AdminUtilisateurs /> : <Navigate to="/" />}
                     />
+                    <Route
+                        path="/admin/dashboard"
+                        element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/" />}
+                    />
+                    <Route
+                        path="/admin/creer-compte"
+                           element={user?.role === "admin" ? <CreerCompte /> : <Navigate to="/" />}
+                    />
+
+
                 </Routes>
             </main>
             <Footer />

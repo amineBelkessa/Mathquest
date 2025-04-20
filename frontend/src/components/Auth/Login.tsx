@@ -46,7 +46,7 @@ const Login: React.FC = () => {
             } else if (role === "enseignant") {
                 navigate("/enseignant/dashboard");
             } else if (role === "admin") {
-                navigate("/admin/utilisateurs");
+                navigate("/admin/dashboard");
             } else {
                 navigate("/"); // Page d'accueil par défaut
             }
