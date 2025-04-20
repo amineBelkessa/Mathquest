@@ -43,6 +43,8 @@ const Login: React.FC = () => {
                 } else {
                     navigate("/eleve/dashboard");
                 }
+            } else if (role === "enseignant") {
+                navigate("/enseignant/dashboard");
             } else if (role === "admin") {
                 navigate("/admin/utilisateurs");
             } else {
@@ -95,7 +97,7 @@ const Login: React.FC = () => {
                     </div>
 
                     <button type="submit" disabled={loading}>
-                        {loading ? "Connexion..." : "Se connecter ☄️"}
+                        {loading ? "Connexion..." : "Se connecter"}
                     </button>
                 </form>
             </div>
