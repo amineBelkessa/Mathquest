@@ -4,6 +4,7 @@ import axios from "axios";
 
 interface SubmissionResult {
     exerciceTitre: string;
+    niveau: string;
     score: number;
     dateSoumission: string;
     reponsesCorrectes: boolean[];
@@ -14,7 +15,7 @@ interface SubmissionResult {
 const ResultatsEleve: React.FC = () => {
     const { username } = useParams<{ username: string }>();
     const [groupedResults, setGroupedResults] = useState<
-        Record<string, { tentatives: number; soumissions: SubmissionResult[] }>
+        Record<string, { niveau: string; tentatives: number; soumissions: SubmissionResult[] }>
     >({});
     const [selectedIndex, setSelectedIndex] = useState<string | null>(null);
     const [error, setError] = useState<string>("");
@@ -23,19 +24,27 @@ const ResultatsEleve: React.FC = () => {
         const fetchResultats = async () => {
             try {
                 const response = await axios.get(
-                    `http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/submissions/results/${username}`
+                    ` http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/submissions/results/${username}`
                 );
 
                 const rawResults: SubmissionResult[] = response.data;
 
-                const grouped: Record<string, { tentatives: number; soumissions: SubmissionResult[] }> = {};
+                const grouped: Record<
+                    string,
+                    { niveau: string; tentatives: number; soumissions: SubmissionResult[] }
+                > = {};
 
                 rawResults.forEach((sub) => {
-                    if (!grouped[sub.exerciceTitre]) {
-                        grouped[sub.exerciceTitre] = { tentatives: 0, soumissions: [] };
+                    const key = `${sub.niveau} - ${sub.exerciceTitre}`;
+                    if (!grouped[key]) {
+                        grouped[key] = {
+                            niveau: sub.niveau,
+                            tentatives: 0,
+                            soumissions: [],
+                        };
                     }
-                    grouped[sub.exerciceTitre].soumissions.push(sub);
-                    grouped[sub.exerciceTitre].tentatives += 1;
+                    grouped[key].soumissions.push(sub);
+                    grouped[key].tentatives += 1;
                 });
 
                 setGroupedResults(grouped);
@@ -66,10 +75,18 @@ const ResultatsEleve: React.FC = () => {
             ) : Object.keys(groupedResults).length === 0 ? (
                 <p className="text-gray-500">Aucun résultat trouvé pour cet élève.</p>
             ) : (
-                Object.entries(groupedResults).map(([titre, data]) => (
-                    <div key={titre} className="mb-14">
+                Object.entries(groupedResults).map(([key, data]) => (
+                    <div key={key} className="mb-14">
                         <div className="flex justify-between items-center mb-4">
-                            <h3 className="text-2xl font-semibold text-purple-700">{titre}</h3>
+                            <div>
+                                <p className="text-sm text-gray-500 font-medium mb-1">
+                                    🎓 Niveau :{" "}
+                                    <span className="text-indigo-700 font-semibold">{data.niveau}</span>
+                                </p>
+                                <h3 className="text-2xl font-semibold text-purple-700">
+                                    {key.split(" - ")[1]}
+                                </h3>
+                            </div>
                             <span className="text-xs bg-purple-200 text-purple-800 font-medium px-3 py-1 rounded-full">
                                 🌀 {data.tentatives} tentative{data.tentatives > 1 ? "s" : ""}
                             </span>
@@ -77,7 +94,7 @@ const ResultatsEleve: React.FC = () => {
 
                         <div className="grid md:grid-cols-2 gap-6">
                             {data.soumissions.map((res, idx) => {
-                                const uniqueKey = `${titre}-${idx}`;
+                                const uniqueKey = `${key}-${idx}`;
                                 return (
                                     <div
                                         key={uniqueKey}
