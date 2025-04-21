@@ -86,10 +86,15 @@ public class SubmissionService {
             Optional<Exercice> optExo = exerciceRepository.findById(sub.getExerciceId());
 
             dto.setExerciceTitre(optExo.map(Exercice::getTitre).orElse("Exercice inconnu"));
+            dto.setNiveau(optExo.map(Exercice::getNiveau).orElse("Niveau inconnu")); // ✅ Ajout du niveau
             dto.setScore(sub.getScore());
             dto.setDateSoumission(sub.getDateSoumission().toString());
-            dto.setReponsesCorrectes(sub.getReponses().stream().map(r -> r.isCorrecte()).toList());
-            dto.setReponsesUtilisateur(sub.getReponses().stream().map(r -> r.getReponseUtilisateur()).toList());
+            dto.setReponsesCorrectes(sub.getReponses().stream()
+                    .map(r -> r.isCorrecte())
+                    .toList());
+            dto.setReponsesUtilisateur(sub.getReponses().stream()
+                    .map(r -> r.getReponseUtilisateur())
+                    .toList());
 
             // 🧠 Bonne gestion des réponses correctes textuelles
             List<String> reponsesCorrectesTextuelles = new ArrayList<>();
@@ -108,4 +113,5 @@ public class SubmissionService {
             return dto;
         }).toList();
     }
+
 }

@@ -5,16 +5,18 @@ import java.util.List;
 public class SubmissionResultDTO {
     private String exerciceTitre;
     private int score;
+    private String niveau;  // ✅ Ajout du champ manquant
     private String dateSoumission;
     private List<Boolean> reponsesCorrectes;
     private List<String> reponsesUtilisateur;
-    private List<String> reponsesCorrectesTextuelles; // ✅ Nouveau champ pour afficher la bonne réponse
+    private List<String> reponsesCorrectesTextuelles;
 
     public SubmissionResultDTO() {}
 
     public SubmissionResultDTO(
             String exerciceTitre,
             int score,
+            String niveau,
             String dateSoumission,
             List<Boolean> reponsesCorrectes,
             List<String> reponsesUtilisateur,
@@ -22,6 +24,7 @@ public class SubmissionResultDTO {
     ) {
         this.exerciceTitre = exerciceTitre;
         this.score = score;
+        this.niveau = niveau;
         this.dateSoumission = dateSoumission;
         this.reponsesCorrectes = reponsesCorrectes;
         this.reponsesUtilisateur = reponsesUtilisateur;
@@ -42,6 +45,14 @@ public class SubmissionResultDTO {
 
     public void setScore(int score) {
         this.score = score;
+    }
+
+    public String getNiveau() {
+        return niveau;
+    }
+
+    public void setNiveau(String niveau) {
+        this.niveau = niveau;
     }
 
     public String getDateSoumission() {
