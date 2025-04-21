@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { motion } from "framer-motion";
 import { getClassement } from "../services/classement.service";
 import { getUser } from "../services/auth.service";
-
 
 import bronzeBadge from "../assets/badges/bronze.png";
 import argentBadge from "../assets/badges/argent.png";
@@ -10,25 +10,11 @@ import orBadge from "../assets/badges/or.png";
 import ferBadge from "../assets/badges/fer.png";
 import questmasterBadge from "../assets/badges/questmaster.png";
 
-const DashboardEleve = () => {
+const DashboardEleve: React.FC = () => {
     const navigate = useNavigate();
     const [userScore, setUserScore] = useState<number>(0);
     const user = getUser();
 
-    const cardStyle =
-        "bg-white text-black p-8 rounded-3xl shadow-2xl hover:scale-105 transition duration-300 text-center";
-
-    // Fonction pour déterminer le badge en fonction du score
-    const getBadge = (score: number) => {
-        if (score >= 1000) return { src: questmasterBadge, label: "QuestMaster" };
-        if (score >= 750) return { src: ferBadge, label: "Fer" };
-        if (score >= 500) return { src: orBadge, label: "Or" };
-        if (score >= 250) return { src: argentBadge, label: "Argent" };
-        if (score >= 100) return { src: bronzeBadge, label: "Bronze" };
-        return null;
-    };
-
-    // Charger le score de l'utilisateur connecté
     useEffect(() => {
         const fetchClassement = async () => {
             try {
@@ -45,93 +31,97 @@ const DashboardEleve = () => {
         fetchClassement();
     }, [user?.username]);
 
+    const getBadge = (score: number) => {
+        if (score >= 1000) return { src: questmasterBadge, label: "QuestMaster" };
+        if (score >= 750) return { src: ferBadge, label: "Fer" };
+        if (score >= 500) return { src: orBadge, label: "Or" };
+        if (score >= 250) return { src: argentBadge, label: "Argent" };
+        if (score >= 100) return { src: bronzeBadge, label: "Bronze" };
+        return null;
+    };
+
     const badge = getBadge(userScore);
 
+    const actions = [
+        {
+            title: "📚 Consulter les exercices",
+            description: "Accède aux exercices adaptés à ton niveau.",
+            color: "bg-indigo-100 text-indigo-700",
+            action: () => navigate("/consulter-exercices"),
+        },
+        {
+            title: "🎯 Rejoindre une salle",
+            description: "Entre un code pour participer à une session en direct.",
+            color: "bg-yellow-100 text-yellow-700",
+            action: () => navigate("/rejoindre-salle"),
+        },
+        {
+            title: "📈 Ma progression",
+            description: "Suis ton évolution et améliore-toi chaque jour.",
+            color: "bg-green-100 text-green-700",
+            action: () => navigate("/eleve/mes-resultats"),
+        },
+        {
+            title: "🥇 Classement",
+            description: "Compare ton score avec les autres élèves.",
+            color: "bg-pink-100 text-pink-700",
+            action: () => navigate("/eleve/classement"),
+        },
+    ];
 
     return (
-        <div className="min-h-screen bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500 flex flex-col items-center justify-center text-white px-6">
-            <div className="flex flex-col items-center justify-center w-full max-w-5xl">
-                {/* Titre principal */}
-                <h1 className="text-6xl font-extrabold text-white drop-shadow-xl animate-bounce text-center mb-20 leading-snug">
-                    🎓 Tableau de bord élève 🎓
-                </h1>
-                {/* Badge de l'élève */}
-                {badge && (
-                    <div className="mb-12 flex flex-col items-center justify-center">
-                        <div className="relative w-24 h-24 bg-gradient-to-br from-yellow-300 via-pink-300 to-purple-400 rounded-full p-1 shadow-xl">
-                            <div className="bg-white rounded-full w-full h-full flex items-center justify-center">
-                                <img
-                                    src={badge.src}
-                                    alt={badge.label}
-                                    className="w-16 h-16 object-contain"
-                                />
+        <div className="max-w-7xl mx-auto px-6 py-16">
+            <motion.h2
+                initial={{ opacity: 0, y: -20 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="text-4xl font-extrabold text-center text-indigo-800 mb-12 tracking-tight"
+            >
+                🎓 Tableau de bord <span className="text-indigo-600">Élève</span> 🎓
+            </motion.h2>
+
+            {badge && (
+                <motion.div
+                    initial={{ scale: 0.95, opacity: 0 }}
+                    animate={{ scale: 1, opacity: 1 }}
+                    transition={{ duration: 0.5 }}
+                    className="mb-12 flex flex-col items-center"
+                >
+                    <div className="relative w-24 h-24 bg-gradient-to-br from-yellow-300 via-pink-300 to-purple-400 rounded-full p-1 shadow-xl">
+                        <div className="bg-white rounded-full w-full h-full flex items-center justify-center">
+                            <img src={badge.src} alt={badge.label} className="w-16 h-16 object-contain" />
+                        </div>
+                    </div>
+                    <h2 className="text-xl font-bold mt-3 text-indigo-700">{badge.label}</h2>
+                    <p className="text-gray-600 text-sm mt-1">Score : {userScore.toFixed(1)} pts</p>
+                </motion.div>
+            )}
+
+            <div className="grid sm:grid-cols-1 md:grid-cols-2 gap-10">
+                {actions.map((card, idx) => (
+                    <motion.div
+                        key={idx}
+                        whileHover={{ scale: 1.03 }}
+                        whileTap={{ scale: 0.98 }}
+                        className="cursor-pointer rounded-2xl bg-white shadow-lg hover:shadow-xl border border-gray-100 transition-all duration-200 p-6"
+                        onClick={card.action}
+                    >
+                        <div className="flex items-center gap-4 mb-4">
+                            <div className={`text-3xl p-3 rounded-xl ${card.color}`}>
+                                {card.title.slice(0, 2)}
+                            </div>
+                            <div>
+                                <h3 className="text-xl font-semibold text-gray-800">
+                                    {card.title.slice(2)}
+                                </h3>
                             </div>
                         </div>
-                        <h2 className="text-xl font-bold mt-3 text-white drop-shadow-sm">
-                            {badge.label}
-                        </h2>
-                        <p className="text-white text-sm mt-1 drop-shadow-sm">
-                            Score : {userScore.toFixed(1)} pts
-                        </p>
-                    </div>
-                )}
-
-
-
-                {/* Zone des cartes */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-10 w-full">
-                    {/* 1. Consulter les exercices */}
-                    <div className={cardStyle}>
-                        <h2 className="text-2xl font-bold mb-2">📚 Consulter les exercices</h2>
-                        <p className="text-gray-700 mb-6">Accède aux exercices adaptés à ton niveau.</p>
-                        <button
-                            onClick={() => navigate("/consulter-exercices")}
-                            className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 shadow"
-                        >
-                            Voir les exercices
-                        </button>
-                    </div>
-
-                    {/* 2. Rejoindre une salle */}
-                    <div className={cardStyle}>
-                        <h2 className="text-2xl font-bold mb-2">🎯 Rejoindre une salle</h2>
-                        <p className="text-gray-700 mb-6">Entre un code de salle pour participer à une session en direct.</p>
-                        <button
-                            onClick={() => navigate("/rejoindre-salle")}
-                            className="px-6 py-2 bg-yellow-400 font-semibold text-black rounded-lg hover:bg-yellow-500 shadow"
-                        >
-                            Rejoindre
-                        </button>
-                    </div>
-
-                    {/* 3. Ma progression */}
-                    <div className={cardStyle}>
-                        <h2 className="text-2xl font-bold mb-2">📈 Ma progression</h2>
-                        <p className="text-gray-700 mb-6">Tu progresses bien ! Continue comme ça 💪</p>
-                        <button
-                            onClick={() => navigate("/eleve/mes-resultats")}
-                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow"
-                        >
-                            Voir mes résultats
-                        </button>
-                    </div>
-
-                    {/* 4. Classement */}
-                    <div className={cardStyle}>
-                        <h2 className="text-2xl font-bold mb-2">🥇 Classement</h2>
-                        <p className="text-gray-700 mb-6">Regarde ton classement parmi les élèves et ton badge !</p>
-                        <button
-                            onClick={() => navigate("/eleve/classement")}
-                            className="px-6 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 shadow"
-                        >
-                            Voir le classement
-                        </button>
-                    </div>
-                </div>
+                        <p className="text-gray-600 text-sm pl-1">{card.description}</p>
+                    </motion.div>
+                ))}
             </div>
         </div>
     );
-
 };
 
 export default DashboardEleve;
