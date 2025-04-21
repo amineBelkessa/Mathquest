@@ -9,7 +9,7 @@ import argentBadge from "../assets/badges/argent.png";
 import orBadge from "../assets/badges/or.png";
 import questmasterBadge from "../assets/badges/questmaster.png";
 
-const getBadge = (score: number): string | null => {
+const getBadgeForClassement = (score: number): string | null => {
     if (score >= 5000) return questmasterBadge;
     if (score >= 2000) return orBadge;
     if (score >= 1000) return argentBadge;
@@ -55,7 +55,7 @@ const Leaderboard = () => {
             </div>
 
             {classement.map((entry, index) => {
-                const badge = getBadge(entry.totalScore);
+                const badge = getBadgeForClassement(entry.totalScore);
                 return (
                     <div
                         key={entry.username}
