@@ -32,11 +32,11 @@ const DashboardEleve: React.FC = () => {
     }, [user?.username]);
 
     const getBadge = (score: number) => {
-        if (score >= 1000) return { src: questmasterBadge, label: "QuestMaster" };
-        if (score >= 750) return { src: ferBadge, label: "Fer" };
-        if (score >= 500) return { src: orBadge, label: "Or" };
-        if (score >= 250) return { src: argentBadge, label: "Argent" };
-        if (score >= 100) return { src: bronzeBadge, label: "Bronze" };
+        if (score >= 3000) return { src: questmasterBadge, label: "QuestMaster" };
+        if (score >= 2000) return { src: orBadge, label: "Or" };
+        if (score >= 1000) return { src: argentBadge, label: "Argent" };
+        if (score >= 500) return { src: bronzeBadge, label: "Bronze" };
+        if (score < 500) return { src: ferBadge, label: "Fer" };
         return null;
     };
 
