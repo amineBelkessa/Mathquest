@@ -5,6 +5,7 @@ export interface Classement {
     username: string;
     totalScore: number;
     totalSubmissions: number;
+    niveau: string;
 }
 
 const getAuthHeaders = () => ({
