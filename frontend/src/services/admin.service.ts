@@ -1,6 +1,7 @@
 import axios from "axios";
-
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/admin";
+// http://localhost:8080/api/admin   local
+//http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/admin   sur le serveur
+const API_URL = "http://localhost:8080/api/admin";
 
 export const fetchEleves = async () => {
     const response = await axios.get(`${API_URL}/utilisateurs`);

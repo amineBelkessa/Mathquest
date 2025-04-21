@@ -15,7 +15,7 @@ import java.util.Optional;
 public class SubmissionService {
     private final SubmissionRepository submissionRepository;
     private final ExerciceRepository exerciceRepository;
-    private final EleveRepository eleveRepository; // ✅ Utilisation de EleveRepository
+    private final EleveRepository eleveRepository;
 
     public SubmissionService(SubmissionRepository submissionRepository, ExerciceRepository exerciceRepository, EleveRepository eleveRepository) {
         this.submissionRepository = submissionRepository;
@@ -27,9 +27,8 @@ public class SubmissionService {
      * Enregistre une soumission et vérifie si l'utilisateur est un élève.
      */
     public Submission saveSubmission(String username, Submission submission) {
-        // 🔹 Vérification de l'existence de l'utilisateur
         System.out.println("🔍 Vérification de l'utilisateur: " + username);
-        Optional<Eleve> eleveOpt = eleveRepository.findByUsername(username); // ✅ Chercher dans EleveRepository
+        Optional<Eleve> eleveOpt = eleveRepository.findByUsername(username);
 
         if (eleveOpt.isEmpty()) {
             System.out.println("❌ Utilisateur NON trouvé en base !");
@@ -51,7 +50,6 @@ public class SubmissionService {
         int totalQuestions = questions.size();
         int bonnesReponses = 0;
 
-        // Comparer les réponses soumises avec les réponses correctes
         for (int i = 0; i < totalQuestions; i++) {
             Exercice.Question question = questions.get(i);
             if (i < submission.getReponses().size()) {
@@ -65,7 +63,6 @@ public class SubmissionService {
             }
         }
 
-        // Calcul du score en pourcentage
         int score = (int) (((double) bonnesReponses / totalQuestions) * 100);
         submission.setScore(score);
         submission.setCorrige(true);
@@ -74,9 +71,16 @@ public class SubmissionService {
     }
 
     /**
-     * Récupérer toutes les soumissions d'un utilisateur spécifique.
+     * 🔹 Récupérer toutes les soumissions d'un utilisateur spécifique.
      */
     public List<Submission> getSubmissionsByUsername(String username) {
         return submissionRepository.findByUsername(username);
+    }
+
+    /**
+     * ✅ Étape 3 — Récupérer toutes les soumissions associées à un salon
+     */
+    public List<Submission> getSubmissionsBySalon(String codeSalon) {
+        return submissionRepository.findByCodeSalon(codeSalon);
     }
 }

@@ -14,7 +14,7 @@ const Header = () => {
     // ✅ Gère l'accès aux exercices
     const handleConsulterExercices = () => {
         if (!user) {
-            navigate("/login", { state: { from: "/consulter-exercices" } }); // ✅ Redirige vers login en sauvegardant la page d'origine
+            navigate("/login", { state: { from: "/consulter-exercices" } });
         } else if (user.role === "eleve") {
             navigate("/consulter-exercices");
         } else {
@@ -38,6 +38,16 @@ const Header = () => {
                     <Link to="/students" className="hover:text-blue-500">Étudiants</Link>
                     <Link to="/jobs" className="hover:text-blue-500">Jobs</Link>
                     <Link to="/shop" className="hover:text-blue-500">Shop</Link>
+
+                    {/* ✅ Lien vers Gérer Salon si parent */}
+                    {user?.role === "parent" && (
+                        <Link to="/gerer-salon" className="hover:text-blue-500">Gérer Salons</Link>
+                    )}
+
+                    {/* ✅ Lien vers Mes Salons si élève */}
+                    {user?.role === "eleve" && (
+                        <Link to="/mes-salons" className="hover:text-blue-500">📚 Mes Salons</Link>
+                    )}
                 </nav>
 
                 {/* BOUTON CONSULTER EXERCICES */}
@@ -59,7 +69,7 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* BOUTONS LOGIN / REGISTER */}
+                {/* BOUTONS LOGIN / REGISTER ou Déconnexion */}
                 <div className="hidden md:flex space-x-4">
                     {user?.username ? (
                         <div className="flex items-center space-x-4">

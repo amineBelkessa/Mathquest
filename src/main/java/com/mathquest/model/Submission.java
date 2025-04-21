@@ -15,15 +15,19 @@ public class Submission {
     private boolean corrige;  // 🔹 Est-ce que l'exercice a été corrigé ?
     private String dateSoumission; // 🔹 Date et heure de la soumission
 
+    // ✅ Ajout du champ manquant
+    private String codeSalon;
+
     public Submission() {}
 
-    public Submission(String exerciceId, String username, List<Reponse> reponses, int score, boolean corrige, String dateSoumission) {
+    public Submission(String exerciceId, String username, List<Reponse> reponses, int score, boolean corrige, String dateSoumission, String codeSalon) {
         this.exerciceId = exerciceId;
         this.username = username;
         this.reponses = reponses;
         this.score = score;
         this.corrige = corrige;
         this.dateSoumission = dateSoumission;
+        this.codeSalon = codeSalon;
     }
 
     // === ✅ GETTERS & SETTERS ===
@@ -46,6 +50,9 @@ public class Submission {
 
     public String getDateSoumission() { return dateSoumission; }
     public void setDateSoumission(String dateSoumission) { this.dateSoumission = dateSoumission; }
+
+    public String getCodeSalon() { return codeSalon; }
+    public void setCodeSalon(String codeSalon) { this.codeSalon = codeSalon; }
 
     // === ✅ Classe interne pour stocker les réponses ===
     public static class Reponse {
