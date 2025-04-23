@@ -1,9 +1,6 @@
 package com.mathquest.controller;
 
-import com.mathquest.model.Admin;
-import com.mathquest.model.Eleve;
-import com.mathquest.model.Parent;
-import com.mathquest.model.User;
+import com.mathquest.model.*;
 import com.mathquest.service.UserService;
 import com.mathquest.util.JwtUtils;
 import org.springframework.http.HttpStatus;
@@ -33,18 +30,22 @@ public class LoginController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest request) {
-        System.out.println("🔥TEST TEST TEST TEST TEST TEST\n\n\nTEST TEST TEST TEST TEST TEST");
         User user = userService.loginUser(request.email, request.password);
         if (user == null) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou MDP pas correct mon reuf");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Email ou mot de passe incorrect !");
         }
 
         String token = jwtUtils.generateToken(user.getEmail());
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
         response.put("username", user.getUsername());
-        response.put("role", user instanceof Eleve ? "eleve" : (user instanceof Parent ? "parent" : (user instanceof Admin ? "admin" : "inconnu")));
-        response.put("version", "🔥 BACKEND V2");
+        response.put("role",
+                user instanceof Eleve ? "eleve" :
+                        user instanceof Parent ? "parent" :
+                                user instanceof Enseignant ? "enseignant" :
+                                        "admin"
+        );
+
         return ResponseEntity.ok(response);
     }
 }

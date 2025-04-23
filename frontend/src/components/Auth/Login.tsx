@@ -1,11 +1,15 @@
-import { useState } from "react";
+import React, { useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+    faEnvelope,
+    faLock,
+    faEye,
+    faEyeSlash
+} from "@fortawesome/free-solid-svg-icons";
 // @ts-ignore
 import { login } from "../../services/auth.service.ts";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faEnvelope, faLock, faEye, faEyeSlash } from "@fortawesome/free-solid-svg-icons";
 import "../../assets/styles/Login.css";
-import React from "react";
-import { useNavigate, useLocation } from "react-router-dom"; // ✅ Importer useLocation
 
 const Login: React.FC = () => {
     const [email, setEmail] = useState<string>("");
@@ -15,7 +19,7 @@ const Login: React.FC = () => {
     const [showPassword, setShowPassword] = useState<boolean>(false);
 
     const navigate = useNavigate();
-    const location = useLocation(); // ✅ Récupère la page précédente avant connexion
+    const location = useLocation();
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
@@ -23,16 +27,32 @@ const Login: React.FC = () => {
         setLoading(true);
 
         try {
-            const user = await login(email, password); // ✅ Récupère l'utilisateur après connexion
-            console.log("Connexion réussie !", user);
+            const user = await login(email, password);
+            console.log("✅ Connexion réussie :", user);
 
-            // ✅ Si l'utilisateur venait de "Consulter Exercices" et qu'il est un élève
-            if (location.state?.from === "/consulter-exercices" && user.role === "eleve") {
-                navigate("/consulter-exercices");
+            // 🔐 Stockage utilisateur si nécessaire
+            localStorage.setItem("user", JSON.stringify(user));
+
+            // 🧭 Redirection intelligente selon le rôle
+            const role = user?.role?.toLowerCase();
+            const redirectFrom = location.state?.from;
+
+            if (role === "eleve") {
+                if (redirectFrom === "/consulter-exercices") {
+                    navigate("/consulter-exercices");
+                } else {
+                    navigate("/eleve/dashboard");
+                }
+            } else if (role === "enseignant") {
+                navigate("/enseignant/dashboard");
+            } else if (role === "admin") {
+                navigate("/admin/dashboard");
             } else {
-                navigate("/"); // ✅ Sinon, il est redirigé vers l'accueil
+                navigate("/"); // Page d'accueil par défaut
             }
+
         } catch (err) {
+            console.error("❌ Erreur de connexion :", err);
             setError("Email ou mot de passe incorrect !");
         } finally {
             setLoading(false);
@@ -42,11 +62,12 @@ const Login: React.FC = () => {
     return (
         <div className="login-container">
             <div className="login-box">
-                <h2>Connexion à MathQuest </h2>
+                <h2>Connexion à MathQuest</h2>
+
                 {error && <p className="error-message">{error}</p>}
 
                 <form onSubmit={handleSubmit}>
-                    {/* Champ Email avec icône */}
+                    {/* 🔹 Email */}
                     <div className="input-container">
                         <FontAwesomeIcon icon={faEnvelope} className="icon" />
                         <input
@@ -58,7 +79,7 @@ const Login: React.FC = () => {
                         />
                     </div>
 
-                    {/* Champ Mot de passe avec icône et visibilité */}
+                    {/* 🔐 Mot de passe */}
                     <div className="input-container">
                         <FontAwesomeIcon icon={faLock} className="icon" />
                         <input
@@ -76,7 +97,7 @@ const Login: React.FC = () => {
                     </div>
 
                     <button type="submit" disabled={loading}>
-                        {loading ? "Connexion..." : "Se connecter ☄️"}
+                        {loading ? "Connexion..." : "Se connecter"}
                     </button>
                 </form>
             </div>

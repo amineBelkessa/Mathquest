@@ -11,28 +11,30 @@ const Header = () => {
         navigate("/login");
     };
 
-    // ✅ Gère l'accès aux exercices
-    const handleConsulterExercices = () => {
-        if (!user) {
-            navigate("/login", { state: { from: "/consulter-exercices" } });
-        } else if (user.role === "eleve") {
-            navigate("/consulter-exercices");
+    const handleAccueil = () => {
+        if (user?.role === "enseignant") {
+            navigate("/enseignant/dashboard");
+        } else if (user?.role === "eleve") {
+            navigate("/eleve/dashboard");
         } else {
-            alert("Seuls les élèves peuvent accéder aux exercices !");
+            navigate("/");
         }
     };
 
     return (
         <header className="bg-white shadow-md">
             <div className="container mx-auto flex justify-between items-center py-4 px-6">
-                {/* LOGO */}
-                <div className="text-2xl font-bold text-gray-900">
+                {/* LOGO CLIQUABLE */}
+                <div
+                    className="text-2xl font-bold text-gray-900 cursor-pointer"
+                    onClick={handleAccueil}
+                >
                     MathQuest<span className="text-blue-500">.</span>
                 </div>
 
                 {/* MENU DE NAVIGATION */}
                 <nav className="hidden md:flex space-x-6 text-gray-700 font-medium">
-                    <Link to="/" className="hover:text-blue-500">Accueil</Link>
+                    <button onClick={handleAccueil} className="hover:text-blue-500">Accueil</button>
                     <Link to="/news" className="hover:text-blue-500">News</Link>
                     <Link to="/agenda" className="hover:text-blue-500">Agenda</Link>
                     <Link to="/students" className="hover:text-blue-500">Étudiants</Link>
@@ -50,13 +52,6 @@ const Header = () => {
                     )}
                 </nav>
 
-                {/* BOUTON CONSULTER EXERCICES */}
-                <button
-                    onClick={handleConsulterExercices}
-                    className="bg-green-500 text-white px-4 py-2 rounded-full hover:bg-green-600 transition">
-                    Consulter Exercices
-                </button>
-
                 {/* BARRE DE RECHERCHE */}
                 <div className="relative hidden md:block">
                     <input
@@ -69,7 +64,7 @@ const Header = () => {
                     </button>
                 </div>
 
-                {/* BOUTONS LOGIN / REGISTER ou Déconnexion */}
+                {/* AUTHENTIFICATION */}
                 <div className="hidden md:flex space-x-4">
                     {user?.username ? (
                         <div className="flex items-center space-x-4">
@@ -85,17 +80,23 @@ const Header = () => {
                         </div>
                     ) : (
                         <>
-                            <Link to="/login" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                            <Link
+                                to="/login"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
+                            >
                                 Connexion
                             </Link>
-                            <Link to="/register" className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition">
+                            <Link
+                                to="/register"
+                                className="bg-blue-500 text-white px-4 py-2 rounded-full hover:bg-blue-600 transition"
+                            >
                                 S'inscrire
                             </Link>
                         </>
                     )}
                 </div>
 
-                {/* MOBILE MENU */}
+                {/* MENU MOBILE (non implémenté ici) */}
                 <button className="md:hidden text-gray-700 focus:outline-none">
                     ☰
                 </button>

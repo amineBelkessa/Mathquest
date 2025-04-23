@@ -3,11 +3,13 @@ package com.mathquest.service;
 import com.mathquest.model.Exercice;
 import com.mathquest.model.Submission;
 import com.mathquest.model.Eleve;
+import com.mathquest.dto.SubmissionResultDTO;
 import com.mathquest.repository.ExerciceRepository;
 import com.mathquest.repository.SubmissionRepository;
 import com.mathquest.repository.EleveRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,7 +40,6 @@ public class SubmissionService {
         Eleve eleve = eleveOpt.get();
         System.out.println("✅ Utilisateur trouvé: " + eleve.getUsername());
 
-        // 🔹 Vérifier que l'exercice existe
         Optional<Exercice> optExercice = exerciceRepository.findById(submission.getExerciceId());
         if (optExercice.isEmpty()) {
             throw new IllegalArgumentException("❌ Exercice non trouvé !");
@@ -51,15 +52,12 @@ public class SubmissionService {
         int bonnesReponses = 0;
 
         for (int i = 0; i < totalQuestions; i++) {
-            Exercice.Question question = questions.get(i);
             if (i < submission.getReponses().size()) {
                 String reponseSoumise = submission.getReponses().get(i).getReponseUtilisateur().trim();
-                if (question.getReponseCorrecte().trim().equalsIgnoreCase(reponseSoumise)) {
-                    bonnesReponses++;
-                    submission.getReponses().get(i).setCorrecte(true);
-                } else {
-                    submission.getReponses().get(i).setCorrecte(false);
-                }
+                String bonneReponse = questions.get(i).getReponseCorrecte().trim();
+                boolean isCorrect = bonneReponse.equalsIgnoreCase(reponseSoumise);
+                submission.getReponses().get(i).setCorrecte(isCorrect);
+                if (isCorrect) bonnesReponses++;
             }
         }
 
@@ -82,5 +80,44 @@ public class SubmissionService {
      */
     public List<Submission> getSubmissionsBySalon(String codeSalon) {
         return submissionRepository.findByCodeSalon(codeSalon);
+    }
+
+    /**
+     * 🔍 Préparer les données à afficher dans l’historique de résultats de l’élève.
+     */
+    public List<SubmissionResultDTO> getSubmissionResultsForUser(String username) {
+        List<Submission> submissions = submissionRepository.findByUsername(username);
+
+        return submissions.stream().map(sub -> {
+            SubmissionResultDTO dto = new SubmissionResultDTO();
+            Optional<Exercice> optExo = exerciceRepository.findById(sub.getExerciceId());
+
+            dto.setExerciceTitre(optExo.map(Exercice::getTitre).orElse("Exercice inconnu"));
+            dto.setNiveau(optExo.map(Exercice::getNiveau).orElse("Niveau inconnu"));
+            dto.setScore(sub.getScore());
+            dto.setDateSoumission(sub.getDateSoumission().toString());
+            dto.setReponsesCorrectes(sub.getReponses().stream()
+                    .map(r -> r.isCorrecte())
+                    .toList());
+            dto.setReponsesUtilisateur(sub.getReponses().stream()
+                    .map(r -> r.getReponseUtilisateur())
+                    .toList());
+
+            // Bonne gestion des réponses correctes textuelles
+            List<String> reponsesCorrectesTextuelles = new ArrayList<>();
+            if (optExo.isPresent()) {
+                List<Exercice.Question> questions = optExo.get().getQuestions();
+                for (int i = 0; i < sub.getReponses().size(); i++) {
+                    if (i < questions.size()) {
+                        reponsesCorrectesTextuelles.add(questions.get(i).getReponseCorrecte());
+                    } else {
+                        reponsesCorrectesTextuelles.add("Inconnue");
+                    }
+                }
+            }
+            dto.setReponsesCorrectesTextuelles(reponsesCorrectesTextuelles);
+
+            return dto;
+        }).toList();
     }
 }

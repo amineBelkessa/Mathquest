@@ -5,6 +5,7 @@ import com.mathquest.service.SubmissionService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import com.mathquest.dto.SubmissionResultDTO;
 
 import java.util.List;
 
@@ -49,5 +50,14 @@ public class SubmissionController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                     .body("Erreur lors de la récupération des soumissions du salon : " + e.getMessage());
         }
+    }
+
+    /**
+     * 🔍 Afficher l’historique des résultats d’un utilisateur
+     */
+    @GetMapping("/results/{username}")
+    public ResponseEntity<List<SubmissionResultDTO>> getResults(@PathVariable String username) {
+        List<SubmissionResultDTO> results = submissionService.getSubmissionResultsForUser(username);
+        return ResponseEntity.ok(results);
     }
 }

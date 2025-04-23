@@ -118,12 +118,13 @@ deploy:
       sshpass -p "$SSH_PASSWORD" ssh -o StrictHostKeyChecking=no administrateur@$IP_SERVER << 'EOF'
       cd mathquest
       git checkout $CI_COMMIT_BRANCH
-      echo "On est sur la branche \"$CI_COMMIT_BRANCH\""
       git fetch
       git pull
       git clean -fd
-      echo "$SSH_PASSWORD" | sudo -S docker-compose down
-      echo "$SSH_PASSWORD" | sudo -S docker-compose up --build -d
+      mvn clean package
+      echo "$SSH_PASSWORD" | sudo -S docker-compose down --rmi all --volumes --remove-orphans
+      echo "$SSH_PASSWORD" | sudo -S docker-compose build --no-cache
+      echo "$SSH_PASSWORD" | sudo -S docker-compose up -d
       EOF
   environment:
     name: $CI_COMMIT_BRANCH
