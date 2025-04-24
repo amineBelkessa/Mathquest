@@ -53,7 +53,7 @@ const DashboardEleve: React.FC = () => {
             title: "🎯 Rejoindre une salle",
             description: "Entre un code pour participer à une session en direct.",
             color: "bg-yellow-100 text-yellow-700",
-            action: () => navigate("/rejoindre-salle"),
+            action: () => navigate("/rejoindre-salon"),
         },
         {
             title: "📈 Ma progression",
