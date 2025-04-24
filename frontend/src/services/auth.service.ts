@@ -1,6 +1,7 @@
 import axios from "axios";
-
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api";
+// http://localhost:8080/api   local
+//http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api  sur le serveur
+const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api ";
 
 export async function register(username: string, email: string, password: string, role: string): Promise<string> {
     const response = await fetch(`${API_URL}/register`, {

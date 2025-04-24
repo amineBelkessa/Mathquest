@@ -40,6 +40,16 @@ const Header = () => {
                     <Link to="/students" className="hover:text-blue-500">Étudiants</Link>
                     <Link to="/jobs" className="hover:text-blue-500">Jobs</Link>
                     <Link to="/shop" className="hover:text-blue-500">Shop</Link>
+
+                    {/* ✅ Lien vers Gérer Salon si parent */}
+                    {user?.role === "parent" && (
+                        <Link to="/gerer-salon" className="hover:text-blue-500">Gérer Salons</Link>
+                    )}
+
+                    {/* ✅ Lien vers Mes Salons si élève */}
+                    {user?.role === "eleve" && (
+                        <Link to="/mes-salons" className="hover:text-blue-500">📚 Mes Salons</Link>
+                    )}
                 </nav>
 
                 {/* BARRE DE RECHERCHE */}

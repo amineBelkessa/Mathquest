@@ -29,7 +29,6 @@ public class SubmissionController {
         return new ResponseEntity<>(savedSubmission, HttpStatus.CREATED);
     }
 
-
     /**
      * 🔹 Récupérer les soumissions d'un utilisateur spécifique.
      */
@@ -39,6 +38,23 @@ public class SubmissionController {
         return ResponseEntity.ok(submissions);
     }
 
+    /**
+     * ✅ Étape 3 — Récupérer toutes les soumissions liées à un salon.
+     */
+    @GetMapping("/salon/{codeSalon}")
+    public ResponseEntity<?> getSubmissionsBySalon(@PathVariable String codeSalon) {
+        try {
+            List<Submission> submissions = submissionService.getSubmissionsBySalon(codeSalon);
+            return ResponseEntity.ok(submissions);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Erreur lors de la récupération des soumissions du salon : " + e.getMessage());
+        }
+    }
+
+    /**
+     * 🔍 Afficher l’historique des résultats d’un utilisateur
+     */
     @GetMapping("/results/{username}")
     public ResponseEntity<List<SubmissionResultDTO>> getResults(@PathVariable String username) {
         List<SubmissionResultDTO> results = submissionService.getSubmissionResultsForUser(username);

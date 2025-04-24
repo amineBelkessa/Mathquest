@@ -1,5 +1,11 @@
 // URL de base de votre API Spring Boot
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api";
+
+// http://localhost:8080/api   local
+//http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api  sur le serveur
+
+const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api ";
+
+
 // 🔹 Typage des modèles utilisés
 export interface Question {
     _id?: string;

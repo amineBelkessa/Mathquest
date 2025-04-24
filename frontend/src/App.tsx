@@ -19,25 +19,27 @@ import AdminUtilisateurs from "./pages/AdminUtilisateurs";
 import AdminDashboard from "./pages/AdminDashboard";
 import CreerCompte from "./components/admin/CreerCompte";
 
-
-
 // Élèves
 import DashboardEleve from "./pages/DashboardEleve";
-// @ts-ignore
 import MesResultats from "./pages/MesResultats.tsx";
+import Classement from "./pages/Classement";
+import ListeEleves from "./pages/ListeEleves.tsx";
+import ResultatsEleve from "./pages/ResultatsEleve.tsx";
 
 // Enseignants
 import DashboardEnseignant from "./pages/DashboardEnseignant";
 import CreerExercice from "./pages/CreerExercice";
-// @ts-ignore
-import ListeEleves from "./pages/ListeEleves.tsx";
-// @ts-ignore
-import ResultatsEleve from "./pages/ResultatsEleve.tsx";
 
-// Auth utils
+// Salons (ajouté par toi)
+import GererSalon from "./pages/GererSalon.tsx";
+import CreerSalon from "./pages/CreerSalon.tsx";
+import RejoindreSalon from "./pages/RejoindreSalon.tsx";
+import SalonDetails from "./pages/SalonDetails.tsx";
+import PerformanceSalon from "./pages/PerformanceSalon.tsx";
+import SalonsRejoints from "./pages/SalonsRejoints.tsx";
+
+// Auth
 import { getUser } from "./services/auth.service";
-
-import Classement from "./pages/Classement";
 
 const AppContent: React.FC = () => {
     const [user, setUser] = useState<any | null>(null);
@@ -53,7 +55,7 @@ const AppContent: React.FC = () => {
             <Header />
             <main className="flex-grow container mx-auto p-4">
                 <Routes>
-                    {/* 🔹 Accueil avec redirection dynamique */}
+                    {/* Accueil */}
                     <Route
                         path="/"
                         element={
@@ -69,58 +71,39 @@ const AppContent: React.FC = () => {
                         }
                     />
 
-                    {/* 🔹 Authentification */}
+                    {/* Auth */}
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<RegisterForm />} />
 
-                    {/* 🔹 Exercices publics ou élève connecté */}
+                    {/* Exercices */}
                     <Route path="/consulter-exercices" element={<ConsulterExercices />} />
                     <Route path="/realiser-exercice/:id" element={<RealiserExercice />} />
 
-                    {/* 🔹 Espace Élève */}
-                    <Route
-                        path="/eleve/dashboard"
-                        element={user?.role === "eleve" ? <DashboardEleve /> : <Navigate to="/" />}
-                    />
-                    <Route
-                        path="/eleve/mes-resultats"
-                        element={user?.role === "eleve" ? <MesResultats /> : <Navigate to="/" />}
-                    />
-                    <Route path="/eleve/classement" element={<Classement/>}/>
+                    {/* Élève */}
+                    <Route path="/eleve/dashboard" element={user?.role === "eleve" ? <DashboardEleve /> : <Navigate to="/" />} />
+                    <Route path="/eleve/mes-resultats" element={user?.role === "eleve" ? <MesResultats /> : <Navigate to="/" />} />
+                    <Route path="/eleve/classement" element={<Classement />} />
 
-                    {/* 🔹 Espace Enseignant */}
-                    <Route
-                        path="/enseignant/dashboard"
-                        element={user?.role === "enseignant" ? <DashboardEnseignant /> : <Navigate to="/" />}
-                    />
-                    <Route
-                        path="/enseignant/creer-exercice"
-                        element={user?.role === "enseignant" ? <CreerExercice /> : <Navigate to="/" />}
-                    />
-                    <Route
-                        path="/enseignant/eleves"
-                        element={user?.role === "enseignant" ? <ListeEleves /> : <Navigate to="/" />}
-                    />
-                    <Route
-                        path="/enseignant/eleves/:username"
-                        element={user?.role === "enseignant" ? <ResultatsEleve /> : <Navigate to="/" />}
-                    />
+                    {/* Enseignant */}
+                    <Route path="/enseignant/dashboard" element={user?.role === "enseignant" ? <DashboardEnseignant /> : <Navigate to="/" />} />
+                    <Route path="/enseignant/creer-exercice" element={user?.role === "enseignant" ? <CreerExercice /> : <Navigate to="/" />} />
+                    <Route path="/enseignant/eleves" element={user?.role === "enseignant" ? <ListeEleves /> : <Navigate to="/" />} />
+                    <Route path="/enseignant/eleves/:username" element={user?.role === "enseignant" ? <ResultatsEleve /> : <Navigate to="/" />} />
 
-                    {/* 🔹 Espace Admin */}
-                    <Route
-                        path="/admin/utilisateurs"
-                        element={user?.role === "admin" ? <AdminUtilisateurs /> : <Navigate to="/" />}
-                    />
-                    <Route
-                        path="/admin/dashboard"
-                        element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/" />}
-                    />
-                    <Route
-                        path="/admin/creer-compte"
-                           element={user?.role === "admin" ? <CreerCompte /> : <Navigate to="/" />}
-                    />
+                    {/* Admin */}
+                    <Route path="/admin/utilisateurs" element={user?.role === "admin" ? <AdminUtilisateurs /> : <Navigate to="/" />} />
+                    <Route path="/admin/dashboard" element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/" />} />
+                    <Route path="/admin/creer-compte" element={user?.role === "admin" ? <CreerCompte /> : <Navigate to="/" />} />
 
+                    {/* Parents */}
+                    <Route path="/gerer-salon" element={user?.role === "parent" ? <GererSalon /> : <Navigate to="/" />} />
+                    <Route path="/creer-salon" element={user?.role === "parent" ? <CreerSalon /> : <Navigate to="/" />} />
+                    <Route path="/performances/:code" element={user?.role === "parent" ? <PerformanceSalon /> : <Navigate to="/" />} />
 
+                    {/* Élève - Salons */}
+                    <Route path="/rejoindre-salon" element={user?.role === "eleve" ? <RejoindreSalon /> : <Navigate to="/" />} />
+                    <Route path="/salon/:code" element={user?.role === "eleve" ? <SalonDetails /> : <Navigate to="/" />} />
+                    <Route path="/mes-salons" element={user?.role === "eleve" ? <SalonsRejoints /> : <Navigate to="/" />} />
                 </Routes>
             </main>
             <Footer />

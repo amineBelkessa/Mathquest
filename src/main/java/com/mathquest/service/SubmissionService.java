@@ -69,14 +69,21 @@ public class SubmissionService {
     }
 
     /**
-     * Récupérer toutes les soumissions d'un utilisateur spécifique.
+     * 🔹 Récupérer toutes les soumissions d'un utilisateur spécifique.
      */
     public List<Submission> getSubmissionsByUsername(String username) {
         return submissionRepository.findByUsername(username);
     }
 
     /**
-     * Préparer les données à afficher dans l’historique de résultats de l’élève.
+     * ✅ Étape 3 — Récupérer toutes les soumissions associées à un salon
+     */
+    public List<Submission> getSubmissionsBySalon(String codeSalon) {
+        return submissionRepository.findByCodeSalon(codeSalon);
+    }
+
+    /**
+     * 🔍 Préparer les données à afficher dans l’historique de résultats de l’élève.
      */
     public List<SubmissionResultDTO> getSubmissionResultsForUser(String username) {
         List<Submission> submissions = submissionRepository.findByUsername(username);
@@ -86,7 +93,7 @@ public class SubmissionService {
             Optional<Exercice> optExo = exerciceRepository.findById(sub.getExerciceId());
 
             dto.setExerciceTitre(optExo.map(Exercice::getTitre).orElse("Exercice inconnu"));
-            dto.setNiveau(optExo.map(Exercice::getNiveau).orElse("Niveau inconnu")); // ✅ Ajout du niveau
+            dto.setNiveau(optExo.map(Exercice::getNiveau).orElse("Niveau inconnu"));
             dto.setScore(sub.getScore());
             dto.setDateSoumission(sub.getDateSoumission().toString());
             dto.setReponsesCorrectes(sub.getReponses().stream()
@@ -96,7 +103,7 @@ public class SubmissionService {
                     .map(r -> r.getReponseUtilisateur())
                     .toList());
 
-            // 🧠 Bonne gestion des réponses correctes textuelles
+            // Bonne gestion des réponses correctes textuelles
             List<String> reponsesCorrectesTextuelles = new ArrayList<>();
             if (optExo.isPresent()) {
                 List<Exercice.Question> questions = optExo.get().getQuestions();
@@ -113,5 +120,4 @@ public class SubmissionService {
             return dto;
         }).toList();
     }
-
 }
