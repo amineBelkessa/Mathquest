@@ -37,7 +37,7 @@ const PerformanceSalon: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const resSalon = await axios.get(`http://localhost:8080/api/salons/${code}`, {
+                const resSalon = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/${code}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setSalon(resSalon.data);
