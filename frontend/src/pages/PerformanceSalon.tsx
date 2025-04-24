@@ -44,41 +44,46 @@ const PerformanceSalon: React.FC = () => {
 
                 const elevesData = await Promise.all(
                     resSalon.data.elevesEmails.map((email: string) =>
-                        axios.get(`http://localhost:8080/api/eleves/${email}`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                        }).then(res => res.data)
+                        axios
+                            .get(`http://localhost:8080/api/eleves/${email}`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                            })
+                            .then((res) => res.data)
                     )
                 );
                 setEleves(elevesData);
 
                 const allSubmissions = await Promise.all(
                     resSalon.data.elevesEmails.map((email: string) =>
-                        axios.get(`http://localhost:8080/api/submissions/user/${email}`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                        }).then(res => res.data)
+                        axios
+                            .get(`http://localhost:8080/api/submissions/user/${email}`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                            })
+                            .then((res) => res.data)
                     )
                 );
                 setSubmissions(allSubmissions.flat());
 
                 const exs = await Promise.all(
                     resSalon.data.exercicesIds.map((id: string) =>
-                        axios.get(`http://localhost:8080/api/exercices/${id}`, {
-                            headers: { Authorization: `Bearer ${token}` },
-                        }).then(res => res.data)
+                        axios
+                            .get(`http://localhost:8080/api/exercices/${id}`, {
+                                headers: { Authorization: `Bearer ${token}` },
+                            })
+                            .then((res) => res.data)
                     )
                 );
                 setExercices(exs);
-
             } catch (err) {
                 console.error("Erreur lors du chargement des données :", err);
             }
         };
 
         if (code && token) fetchData();
-    }, [code]);
+    }, [code, token]); // ✅ correction ici
 
     const getScore = (username: string, exerciceId: string): number | null => {
-        const sub = submissions.find(s => s.username === username && s.exerciceId === exerciceId);
+        const sub = submissions.find((s) => s.username === username && s.exerciceId === exerciceId);
         return sub ? sub.score : null;
     };
 
@@ -91,7 +96,9 @@ const PerformanceSalon: React.FC = () => {
                 <tr>
                     <th className="border px-4 py-2">Élève</th>
                     {exercices.map((ex) => (
-                        <th key={ex.id} className="border px-4 py-2">{ex.titre}</th>
+                        <th key={ex.id} className="border px-4 py-2">
+                            {ex.titre}
+                        </th>
                     ))}
                     <th className="border px-4 py-2">Moyenne</th>
                 </tr>
@@ -100,9 +107,10 @@ const PerformanceSalon: React.FC = () => {
                 {eleves.map((eleve) => {
                     const scores = exercices.map((ex) => getScore(eleve.username, ex.id));
                     const validScores = scores.filter((s): s is number => s !== null);
-                    const moyenne = validScores.length > 0
-                        ? validScores.reduce((a, b) => a + b, 0) / validScores.length
-                        : 0;
+                    const moyenne =
+                        validScores.length > 0
+                            ? validScores.reduce((a, b) => a + b, 0) / validScores.length
+                            : 0;
 
                     const aFaitAuMoinsUn = validScores.length > 0;
 
@@ -114,7 +122,9 @@ const PerformanceSalon: React.FC = () => {
                             <td className="border px-4 py-2 font-medium">
                                 {eleve.prenom} {eleve.nom}
                                 {!aFaitAuMoinsUn && (
-                                    <span className="text-sm text-red-600 ml-2">(aucune soumission)</span>
+                                    <span className="text-sm text-red-600 ml-2">
+                                            (aucune soumission)
+                                        </span>
                                 )}
                             </td>
                             {scores.map((score, idx) => (
@@ -122,7 +132,9 @@ const PerformanceSalon: React.FC = () => {
                                     {score !== null ? `${score}%` : "–"}
                                 </td>
                             ))}
-                            <td className="border px-4 py-2 font-semibold">{aFaitAuMoinsUn ? `${Math.round(moyenne)}%` : "–"}</td>
+                            <td className="border px-4 py-2 font-semibold">
+                                {aFaitAuMoinsUn ? `${Math.round(moyenne)}%` : "–"}
+                            </td>
                         </tr>
                     );
                 })}

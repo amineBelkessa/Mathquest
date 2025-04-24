@@ -46,7 +46,9 @@ const SalonDetails: React.FC = () => {
                 const fin = new Date(salonData.dateFin);
 
                 if (now >= debut && now <= fin) {
-                    const promises = salonData.exercicesIds.map((id: string) => getExerciceById(id));
+                    const promises = salonData.exercicesIds.map((id: string) =>
+                        getExerciceById(id)
+                    );
                     const exs = await Promise.all(promises);
                     setExercices(exs);
                 }
@@ -68,7 +70,7 @@ const SalonDetails: React.FC = () => {
             fetchSalon();
             fetchSubmissions();
         }
-    }, [code]);
+    }, [code, user?.username]); // ✅ Correction ici
 
     if (error) {
         return <p className="text-red-600 text-center mt-10">{error}</p>;
@@ -95,19 +97,28 @@ const SalonDetails: React.FC = () => {
                     ⏳ Ce salon est actuellement inactif. Revenez plus tard.
                 </p>
             ) : exercices.length === 0 ? (
-                <p className="text-center text-gray-500">Aucun exercice attribué pour le moment.</p>
+                <p className="text-center text-gray-500">
+                    Aucun exercice attribué pour le moment.
+                </p>
             ) : (
                 <div className="space-y-4">
                     {exercices.map((ex) => {
-                        const soumission = soumissions.find((s) => s.exerciceId === ex.id);
+                        const soumission = soumissions.find(
+                            (s) => s.exerciceId === ex.id
+                        );
                         return (
-                            <div key={ex.id} className="p-4 border rounded shadow-sm">
+                            <div
+                                key={ex.id}
+                                className="p-4 border rounded shadow-sm"
+                            >
                                 <h4 className="text-lg font-bold">{ex.titre}</h4>
                                 <p className="text-sm text-gray-600">
                                     Type : {ex.typeExercice} | Niveau : {ex.niveau}
                                 </p>
                                 {ex.description && (
-                                    <p className="text-gray-700 mt-1">{ex.description}</p>
+                                    <p className="text-gray-700 mt-1">
+                                        {ex.description}
+                                    </p>
                                 )}
 
                                 {soumission ? (
@@ -116,7 +127,9 @@ const SalonDetails: React.FC = () => {
                                     </p>
                                 ) : (
                                     <button
-                                        onClick={() => navigate(`/realiser-exercice/${ex.id}`)}
+                                        onClick={() =>
+                                            navigate(`/realiser-exercice/${ex.id}`)
+                                        }
                                         className="mt-2 bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-700"
                                     >
                                         🎯 Réaliser
