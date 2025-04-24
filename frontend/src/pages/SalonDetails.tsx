@@ -33,7 +33,7 @@ const SalonDetails: React.FC = () => {
     useEffect(() => {
         const fetchSalon = async () => {
             try {
-                const response = await axios.get(`http://localhost:8080/api/salons/${code}`, {
+                const response = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/${code}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },
