@@ -49,7 +49,7 @@ export default function Home() {
                                 ➕ Créer un salon
                             </Link>
                             <Link
-                                to="/gerer-salon"
+                                to="/performances/test" // ou "/performances/:code" selon ton besoin
                                 className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition"
                             >
                                 📈 Voir les performances

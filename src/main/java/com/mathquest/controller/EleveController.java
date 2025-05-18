@@ -1,6 +1,7 @@
 package com.mathquest.controller;
 
 import com.mathquest.model.Eleve;
+import com.mathquest.dto.EleveDTO;
 import com.mathquest.repository.EleveRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -8,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/eleves")
@@ -19,11 +21,14 @@ public class EleveController {
         this.eleveRepository = eleveRepository;
     }
 
-    // ✅ Récupérer tous les élèves
+    // ✅ Récupérer tous les élèves (version sécurisée DTO)
     @GetMapping
-    public ResponseEntity<List<Eleve>> getAllEleves() {
-        List<Eleve> eleves = eleveRepository.findAll();
-        return ResponseEntity.ok(eleves);
+    public ResponseEntity<List<EleveDTO>> getAllEleveDTOs() {
+        List<EleveDTO> dtos = eleveRepository.findAll()
+                .stream()
+                .map(e -> new EleveDTO(e.getId(), e.getUsername(), e.getEmail()))
+                .collect(Collectors.toList());
+        return ResponseEntity.ok(dtos);
     }
 
     // ✅ Récupérer un élève par username (email dans ton cas)

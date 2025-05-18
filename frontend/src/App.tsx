@@ -30,13 +30,20 @@ import ResultatsEleve from "./pages/ResultatsEleve.tsx";
 import DashboardEnseignant from "./pages/DashboardEnseignant";
 import CreerExercice from "./pages/CreerExercice";
 
-// Salons (ajouté par toi)
+// Salons (élèves & parents)
 import GererSalon from "./pages/GererSalon.tsx";
 import CreerSalon from "./pages/CreerSalon.tsx";
 import RejoindreSalon from "./pages/RejoindreSalon.tsx";
 import SalonDetails from "./pages/SalonDetails.tsx";
 import PerformanceSalon from "./pages/PerformanceSalon.tsx";
 import SalonsRejoints from "./pages/SalonsRejoints.tsx";
+
+// Parents - nouvelles pages
+import ParentDashboard from "./pages/ParentDashboard";
+import GererMesEnfants from "./pages/GererMesEnfants";
+import EnfantsList from "./pages/EnfantsList";
+import ParentProgression from "./pages/ParentProgression";
+import ProgressionPage from "./pages/ProgressionPage";
 
 // Auth
 import { getUser } from "./services/auth.service";
@@ -65,6 +72,8 @@ const AppContent: React.FC = () => {
                                 <Navigate to="/enseignant/dashboard" />
                             ) : user?.role === "admin" ? (
                                 <Navigate to="/admin/dashboard" />
+                            ) : user?.role === "parent" ? (
+                                <Navigate to="/parent/dashboard" />
                             ) : (
                                 <Home />
                             )
@@ -95,15 +104,22 @@ const AppContent: React.FC = () => {
                     <Route path="/admin/dashboard" element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/" />} />
                     <Route path="/admin/creer-compte" element={user?.role === "admin" ? <CreerCompte /> : <Navigate to="/" />} />
 
-                    {/* Parents */}
-                    <Route path="/gerer-salon" element={user?.role === "parent" ? <GererSalon /> : <Navigate to="/" />} />
-                    <Route path="/creer-salon" element={user?.role === "parent" ? <CreerSalon /> : <Navigate to="/" />} />
+                    {/* Parents - nouvelles fonctionnalités */}
+                    <Route path="/parent/dashboard" element={user?.role === "parent" ? <ParentDashboard /> : <Navigate to="/" />} />
+                    <Route path="/parent/gererenfants" element={user?.role === "parent" ? <GererMesEnfants /> : <Navigate to="/" />} />
+                    <Route path="/parent/enfants" element={user?.role === "parent" ? <EnfantsList /> : <Navigate to="/" />} />
+                    <Route path="/parent/progression" element={user?.role === "parent" ? <ParentProgression /> : <Navigate to="/" />} />
+                    <Route path="/parent/progression/:enfantId" element={user?.role === "parent" ? <ProgressionPage /> : <Navigate to="/" />} />
                     <Route path="/performances/:code" element={user?.role === "parent" ? <PerformanceSalon /> : <Navigate to="/" />} />
 
                     {/* Élève - Salons */}
                     <Route path="/rejoindre-salon" element={user?.role === "eleve" ? <RejoindreSalon /> : <Navigate to="/" />} />
                     <Route path="/salon/:code" element={user?.role === "eleve" ? <SalonDetails /> : <Navigate to="/" />} />
                     <Route path="/mes-salons" element={user?.role === "eleve" ? <SalonsRejoints /> : <Navigate to="/" />} />
+
+                    {/* Parents - anciens salons (à modifier plus tard vers enseignants) */}
+                    <Route path="/gerer-salon" element={user?.role === "parent" ? <GererSalon /> : <Navigate to="/" />} />
+                    <Route path="/creer-salon" element={user?.role === "parent" ? <CreerSalon /> : <Navigate to="/" />} />
                 </Routes>
             </main>
             <Footer />

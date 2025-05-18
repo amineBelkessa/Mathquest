@@ -1,0 +1,150 @@
+/* Disposition graphique et tableau */
+.graph-and-table-container {
+    display: flex;
+    justify-content: space-between;
+    gap: 30px;
+    width: 100%;
+    margin-bottom: 30px;
+    flex-wrap: wrap; /* Permet de s'ajuster sur petits écrans */
+}
+
+/* Graphique */
+.graph-container {
+    flex: 1;
+    max-width: 75%; /* Graphique prend 75% */
+    min-width: 300px;
+    height: 450px; /* Ajuster la hauteur du graphique */
+}
+
+/* Suggestions d'exercices */
+.suggestions-container {
+    flex: 1;
+    max-width: 40%;
+    min-width: 300px;
+    margin-bottom: 30px;
+    background-color: #f9fafb;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+}
+
+.suggestions-container h3 {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 15px;
+}
+
+.suggestions-container ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+.suggestions-container li {
+    background-color: #edf2f7;
+    padding: 12px;
+    margin: 10px 0;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.suggestions-container a {
+    background-color: #4c51bf;
+    color: white;
+    padding: 10px 15px;
+    border-radius: 5px;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.suggestions-container a:hover {
+    background-color: #5a67d8;
+}
+
+.suggestions-container p {
+    color: #777;
+    font-size: 1rem;
+    margin-top: 15px;
+}
+
+/* Tableau des résultats */
+.table-container {
+    flex: 1;
+    max-width: 100%;
+    min-width: 300px;
+    margin-bottom: 30px;
+    background-color: #f9fafb;
+    border-radius: 10px;
+    padding: 15px;
+    box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+    max-height: 400px; /* Hauteur maximale du tableau */
+    overflow-y: auto;   /* Défilement vertical */
+    overflow-x: auto;   /* Défilement horizontal si nécessaire */
+}
+
+/* Styles du tableau */
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+th, td {
+    text-align: left;
+    padding: 12px;
+    border: 1px solid #e2e8f0;
+}
+
+th {
+    background-color: #f4f4f9;
+}
+
+tbody tr:hover {
+    background-color: #e8f4ff;
+}
+
+/* Filtres */
+.filters-container {
+    display: flex;
+    justify-content: flex-start;
+    gap: 20px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+select {
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    font-size: 1rem;
+    background-color: #fff;
+    color: #333;
+    width: 200px;
+}
+
+/* Small screen adjustment */
+@media (max-width: 768px) {
+    .graph-and-table-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .graph-container {
+        max-width: 100%;
+        height: 300px;
+    }
+
+    .table-container {
+        max-width: 100%;
+    }
+
+    .suggestions-container {
+        max-width: 100%;
+    }
+}
+
+.table-container {
+    max-height: 400px; /* Hauteur maximale du tableau */
+    overflow-y: auto; /* Ajoute la barre de défilement verticale */
+    overflow-x: auto; /* Ajoute la barre de défilement horizontale si nécessaire */
+}
