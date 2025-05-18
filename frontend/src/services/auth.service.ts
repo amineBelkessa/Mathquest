@@ -1,33 +1,39 @@
 import axios from "axios";
+
 // http://localhost:8080/api   local
-//http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api  sur le serveur
+// http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api  sur le serveur
 const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api";
 
+// 🔐 Enregistrement
 export async function register(username: string, email: string, password: string, role: string): Promise<string> {
     const response = await fetch(`${API_URL}/register`, {
         method: "POST",
         headers: {
             "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, email, password, role }), // Envoi du rôle au backend
+        body: JSON.stringify({ username, email, password, role }),
     });
 
     if (!response.ok) {
         throw new Error("Erreur d'inscription");
     }
 
-    return response.text(); // Retourne le token si l'inscription réussit
+    return response.text();
 }
 
+// 🔐 Connexion
 export const login = async (email: string, password: string) => {
     try {
         const response = await axios.post(`${API_URL}/login`, { email, password });
-        console.log("📌 Réponse du backend lors de la connexion :", response.data); // ✅ Vérification
-        if (response.data.token && response.data.username && response.data.role) {
-            localStorage.setItem("token", response.data.token); // ✅ Stocke uniquement le token
-            localStorage.setItem("user", JSON.stringify({ username: response.data.username, role: response.data.role })); // ✅ Stocke user séparément
+        console.log("📌 Réponse du backend lors de la connexion :", response.data);
+
+        const { token, username, role, id } = response.data;
+
+        if (token && username && role && id) {
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify({ id, username, role })); // 👈 Ajout du champ `id`
         } else {
-            throw new Error("Réponse du serveur invalide");
+            throw new Error("Réponse du serveur invalide (données manquantes)");
         }
 
         return response.data;
@@ -36,11 +42,13 @@ export const login = async (email: string, password: string) => {
     }
 };
 
+// 🔓 Déconnexion
 export const logout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
 };
 
+// 👤 Récupérer l'utilisateur connecté
 export const getUser = () => {
     const user = localStorage.getItem("user");
 

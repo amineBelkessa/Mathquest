@@ -27,9 +27,7 @@ const GererSalon: React.FC = () => {
         const fetchSalons = async () => {
             try {
                 const res = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/prof/${user.username}`, {
-                    headers: {
-                        Authorization: `Bearer ${localStorage.getItem("token")}`,
-                    },
+                    headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 });
                 setSalons(res.data);
             } catch (err) {
@@ -57,11 +55,14 @@ const GererSalon: React.FC = () => {
         setError("");
         setSuccess("");
 
+        if (!nomSalon.trim()) {
+            setError("Veuillez saisir un nom pour le salon.");
+            return;
+        }
         if (!dateDebut || !dateFin) {
             setError("Veuillez spécifier une date de début et de fin.");
             return;
         }
-
         if (new Date(dateDebut) >= new Date(dateFin)) {
             setError("La date de début doit être avant la date de fin.");
             return;
@@ -100,6 +101,10 @@ const GererSalon: React.FC = () => {
 
     const handleVoirPerformances = (codeSalon: string) => {
         navigate(`/performances/${codeSalon}`);
+    };
+
+    const handleVoirDetails = (codeSalon: string) => {
+        navigate(`/salon/${codeSalon}`);
     };
 
     return (
@@ -150,12 +155,14 @@ const GererSalon: React.FC = () => {
             ) : (
                 <ul className="space-y-4">
                     {salons.map((salon) => (
-                        <li key={salon.id} className="border rounded p-4 shadow-sm">
+                        <li key={salon.id} className="border rounded p-4 shadow-sm space-y-2">
                             <p><strong>Nom :</strong> {salon.nom}</p>
                             <p><strong>Code :</strong> {salon.code}</p>
-                            <p className="text-sm text-gray-500">🕒 {salon.dateDebut} ➜ {salon.dateFin}</p>
+                            <p className="text-sm text-gray-500">
+                                🕒 {new Date(salon.dateDebut).toLocaleString()} ➜ {new Date(salon.dateFin).toLocaleString()}
+                            </p>
 
-                            <div className="mt-2 flex gap-2 items-center">
+                            <div className="flex flex-col sm:flex-row gap-2">
                                 <select
                                     value={exerciceIds[salon.code] || ""}
                                     onChange={(e) =>
@@ -172,7 +179,8 @@ const GererSalon: React.FC = () => {
                                 </select>
                                 <button
                                     onClick={() => handleAjouterExercice(salon.code)}
-                                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700"
+                                    className="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700 disabled:opacity-50"
+                                    disabled={!exerciceIds[salon.code]}
                                 >
                                     ➕ Attribuer
                                 </button>
@@ -180,7 +188,13 @@ const GererSalon: React.FC = () => {
                                     onClick={() => handleVoirPerformances(salon.code)}
                                     className="bg-purple-600 text-white px-3 py-1 rounded hover:bg-purple-700"
                                 >
-                                    📊 Voir les performances
+                                    📊 Performances
+                                </button>
+                                <button
+                                    onClick={() => handleVoirDetails(salon.code)}
+                                    className="bg-indigo-600 text-white px-3 py-1 rounded hover:bg-indigo-700"
+                                >
+                                    🔍 Détails
                                 </button>
                             </div>
                         </li>

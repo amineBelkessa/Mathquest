@@ -11,6 +11,14 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@CrossOrigin(
+        origins = {
+                "http://localhost:3000",
+                "http://srv-dpi-proj-mathquest-test.univ-rouen.fr",
+                "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr"
+        },
+        allowCredentials = "true"
+)
 @RestController
 @RequestMapping("/api/progres")
 public class ProgressionController {
@@ -22,54 +30,38 @@ public class ProgressionController {
         this.submissionService = submissionService;
     }
 
-    /**
-     * ✅ Récupérer l'historique des résultats d'un élève
-     */
+    // 🔄 Historique complet des soumissions d'un élève
     @GetMapping("/{username}")
     public ResponseEntity<List<SubmissionResultDTO>> getProgres(@PathVariable String username) {
-        System.out.println("🔹 Récupération de la progression pour l'élève : " + username);
+        System.out.println("🔹 getProgres() appelé avec : " + username);
         List<SubmissionResultDTO> results = submissionService.getSubmissionResultsForUser(username);
-        if (results.isEmpty()) {
-            System.out.println("❌ Aucun résultat trouvé pour l'élève : " + username);
-            return ResponseEntity.notFound().build();
-        }
-        System.out.println("✅ Résultats récupérés pour l'élève : " + username);
-        return ResponseEntity.ok(results);
+        return ResponseEntity.ok(results); // ✅ Toujours retourner une liste (même vide)
     }
 
-    /**
-     * ✅ Récupérer les suggestions d'exercices pour un élève
-     */
+    // 🎯 Suggestions d'exercices pour un élève
     @GetMapping("/suggestions/{username}")
     public ResponseEntity<List<Exercice>> getSuggestions(@PathVariable String username) {
         try {
-            System.out.println("🔹 Récupération des suggestions pour l'élève : " + username);
+            System.out.println("🔍 Suggestions demandées pour : " + username);
             List<Exercice> suggestions = submissionService.getSuggestionsForUser(username);
-            System.out.println("📊 Suggestions récupérées : " + suggestions.size());
             return ResponseEntity.ok(suggestions);
         } catch (Exception e) {
-            System.out.println("❌ Erreur lors de la récupération des suggestions : " + e.getMessage());
+            System.err.println("❌ Erreur lors des suggestions : " + e.getMessage());
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 
-    /**
-     * ✅ Récupérer la progression pour affichage graphique (ProgressionDTO)
-     */
+    // 📈 Progression détaillée pour affichage graphique
     @GetMapping("/results/eleveProgression")
-    public ResponseEntity<?> getEleveProgression(@RequestParam String username) {
-        System.out.println("🔍 Récupération des progrès pour : " + username);
+    public ResponseEntity<List<ProgressionDTO>> getEleveProgression(@RequestParam String username) {
+        System.out.println("📊 getEleveProgression() pour : " + username);
         try {
             List<ProgressionDTO> progressionList = submissionService.getProgressionForEleve(username);
-            if (progressionList.isEmpty()) {
-                return ResponseEntity.status(HttpStatus.NO_CONTENT).body("Aucune donnée de progression trouvée pour cet élève.");
-            }
-            return ResponseEntity.ok(progressionList);
+            return ResponseEntity.ok(progressionList); // ✅ Même si vide, retourner 200 avec []
         } catch (IllegalArgumentException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Erreur : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                    .body("Erreur lors de la récupération des données de progression : " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
         }
     }
 }

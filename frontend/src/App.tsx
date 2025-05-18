@@ -30,7 +30,7 @@ import ResultatsEleve from "./pages/ResultatsEleve.tsx";
 import DashboardEnseignant from "./pages/DashboardEnseignant";
 import CreerExercice from "./pages/CreerExercice";
 
-// Salons (élèves & parents)
+// Salons
 import GererSalon from "./pages/GererSalon.tsx";
 import CreerSalon from "./pages/CreerSalon.tsx";
 import RejoindreSalon from "./pages/RejoindreSalon.tsx";
@@ -38,45 +38,47 @@ import SalonDetails from "./pages/SalonDetails.tsx";
 import PerformanceSalon from "./pages/PerformanceSalon.tsx";
 import SalonsRejoints from "./pages/SalonsRejoints.tsx";
 
-// Parents - nouvelles pages
+// Parents
 import ParentDashboard from "./pages/ParentDashboard";
 import GererMesEnfants from "./pages/GererMesEnfants";
 import EnfantsList from "./pages/EnfantsList";
 import ParentProgression from "./pages/ParentProgression";
 import ProgressionPage from "./pages/ProgressionPage";
 
-// Auth
+// Auth utils
 import { getUser } from "./services/auth.service";
 
 const AppContent: React.FC = () => {
     const [user, setUser] = useState<any | null>(null);
+    const [loading, setLoading] = useState(true);
     const location = useLocation();
 
     useEffect(() => {
         const u = getUser();
-        setUser(u);
+        if (u?.username && u?.role) {
+            setUser(u);
+        } else {
+            setUser(null);
+        }
+        setLoading(false);
     }, [location.pathname]);
+
+    if (loading) return <div className="text-center mt-10 text-indigo-700 font-bold text-xl">Chargement...</div>;
 
     return (
         <div className="flex flex-col min-h-screen">
             <Header />
             <main className="flex-grow container mx-auto p-4">
                 <Routes>
-                    {/* Accueil */}
+                    {/* Accueil redirigé */}
                     <Route
                         path="/"
                         element={
-                            user?.role === "eleve" ? (
-                                <Navigate to="/eleve/dashboard" />
-                            ) : user?.role === "enseignant" ? (
-                                <Navigate to="/enseignant/dashboard" />
-                            ) : user?.role === "admin" ? (
-                                <Navigate to="/admin/dashboard" />
-                            ) : user?.role === "parent" ? (
-                                <Navigate to="/parent/dashboard" />
-                            ) : (
-                                <Home />
-                            )
+                            user?.role === "eleve" ? <Navigate to="/eleve/dashboard" /> :
+                                user?.role === "enseignant" ? <Navigate to="/enseignant/dashboard" /> :
+                                    user?.role === "admin" ? <Navigate to="/admin/dashboard" /> :
+                                        user?.role === "parent" ? <Navigate to="/parent/dashboard" /> :
+                                            <Home />
                         }
                     />
 
@@ -84,42 +86,63 @@ const AppContent: React.FC = () => {
                     <Route path="/login" element={<Login />} />
                     <Route path="/register" element={<RegisterForm />} />
 
-                    {/* Exercices */}
+                    {/* Public */}
                     <Route path="/consulter-exercices" element={<ConsulterExercices />} />
                     <Route path="/realiser-exercice/:id" element={<RealiserExercice />} />
 
                     {/* Élève */}
-                    <Route path="/eleve/dashboard" element={user?.role === "eleve" ? <DashboardEleve /> : <Navigate to="/" />} />
-                    <Route path="/eleve/mes-resultats" element={user?.role === "eleve" ? <MesResultats /> : <Navigate to="/" />} />
-                    <Route path="/eleve/classement" element={<Classement />} />
+                    {user?.role === "eleve" && (
+                        <>
+                            <Route path="/eleve/dashboard" element={<DashboardEleve />} />
+                            <Route path="/eleve/mes-resultats" element={<MesResultats />} />
+                            <Route path="/eleve/classement" element={<Classement />} />
+                            <Route path="/rejoindre-salon" element={<RejoindreSalon />} />
+                            <Route path="/salon/:code" element={<SalonDetails />} />
+                            <Route path="/mes-salons" element={<SalonsRejoints />} />
+                        </>
+                    )}
 
                     {/* Enseignant */}
-                    <Route path="/enseignant/dashboard" element={user?.role === "enseignant" ? <DashboardEnseignant /> : <Navigate to="/" />} />
-                    <Route path="/enseignant/creer-exercice" element={user?.role === "enseignant" ? <CreerExercice /> : <Navigate to="/" />} />
-                    <Route path="/enseignant/eleves" element={user?.role === "enseignant" ? <ListeEleves /> : <Navigate to="/" />} />
-                    <Route path="/enseignant/eleves/:username" element={user?.role === "enseignant" ? <ResultatsEleve /> : <Navigate to="/" />} />
+                    {user?.role === "enseignant" && (
+                        <>
+                            <Route path="/enseignant/dashboard" element={<DashboardEnseignant />} />
+                            <Route path="/enseignant/creer-exercice" element={<CreerExercice />} />
+                            <Route path="/enseignant/eleves" element={<ListeEleves />} />
+                            <Route path="/enseignant/eleves/:username" element={<ResultatsEleve />} />
+                            <Route path="/creer-salon" element={<CreerSalon />} />
+                            <Route path="/gerer-salon" element={<GererSalon />} /> {/* ✅ Ajouté ici */}
+                            <Route path="/parent/progression" element={<ParentProgression />} />
+                            <Route path="/parent/progression/:enfantId" element={<ProgressionPage />} />
+                            <Route path="/performances/:code" element={<PerformanceSalon />} />
+                        </>
+                    )}
+
 
                     {/* Admin */}
-                    <Route path="/admin/utilisateurs" element={user?.role === "admin" ? <AdminUtilisateurs /> : <Navigate to="/" />} />
-                    <Route path="/admin/dashboard" element={user?.role === "admin" ? <AdminDashboard /> : <Navigate to="/" />} />
-                    <Route path="/admin/creer-compte" element={user?.role === "admin" ? <CreerCompte /> : <Navigate to="/" />} />
+                    {user?.role === "admin" && (
+                        <>
+                            <Route path="/admin/utilisateurs" element={<AdminUtilisateurs />} />
+                            <Route path="/admin/dashboard" element={<AdminDashboard />} />
+                            <Route path="/admin/creer-compte" element={<CreerCompte />} />
+                        </>
+                    )}
 
-                    {/* Parents - nouvelles fonctionnalités */}
-                    <Route path="/parent/dashboard" element={user?.role === "parent" ? <ParentDashboard /> : <Navigate to="/" />} />
-                    <Route path="/parent/gererenfants" element={user?.role === "parent" ? <GererMesEnfants /> : <Navigate to="/" />} />
-                    <Route path="/parent/enfants" element={user?.role === "parent" ? <EnfantsList /> : <Navigate to="/" />} />
-                    <Route path="/parent/progression" element={user?.role === "parent" ? <ParentProgression /> : <Navigate to="/" />} />
-                    <Route path="/parent/progression/:enfantId" element={user?.role === "parent" ? <ProgressionPage /> : <Navigate to="/" />} />
-                    <Route path="/performances/:code" element={user?.role === "parent" ? <PerformanceSalon /> : <Navigate to="/" />} />
+                    {/* Parent */}
+                    {user?.role === "parent" && (
+                        <>
+                            <Route path="/parent/dashboard" element={<ParentDashboard />} />
+                            <Route path="/parent/gererenfants" element={<GererMesEnfants />} />
+                            <Route path="/parent/enfants" element={<EnfantsList />} />
+                            <Route path="/parent/progression" element={<ParentProgression />} />
+                            <Route path="/parent/progression/:enfantId" element={<ProgressionPage />} />
+                            <Route path="/performances/:code" element={<PerformanceSalon />} />
+                            <Route path="/gerer-salon" element={<GererSalon />} />
+                            <Route path="/creer-salon" element={<CreerSalon />} />
+                        </>
+                    )}
 
-                    {/* Élève - Salons */}
-                    <Route path="/rejoindre-salon" element={user?.role === "eleve" ? <RejoindreSalon /> : <Navigate to="/" />} />
-                    <Route path="/salon/:code" element={user?.role === "eleve" ? <SalonDetails /> : <Navigate to="/" />} />
-                    <Route path="/mes-salons" element={user?.role === "eleve" ? <SalonsRejoints /> : <Navigate to="/" />} />
-
-                    {/* Parents - anciens salons (à modifier plus tard vers enseignants) */}
-                    <Route path="/gerer-salon" element={user?.role === "parent" ? <GererSalon /> : <Navigate to="/" />} />
-                    <Route path="/creer-salon" element={user?.role === "parent" ? <CreerSalon /> : <Navigate to="/" />} />
+                    {/* Fallback */}
+                    <Route path="*" element={<Navigate to="/" />} />
                 </Routes>
             </main>
             <Footer />

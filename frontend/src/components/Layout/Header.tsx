@@ -16,6 +16,8 @@ const Header = () => {
             navigate("/enseignant/dashboard");
         } else if (user?.role === "eleve") {
             navigate("/eleve/dashboard");
+        } else if (user?.role === "parent") {
+            navigate("/parent/dashboard");
         } else {
             navigate("/");
         }
@@ -41,12 +43,15 @@ const Header = () => {
                     <Link to="/jobs" className="hover:text-blue-500">Jobs</Link>
                     <Link to="/shop" className="hover:text-blue-500">Shop</Link>
 
-                    {/* ✅ Lien vers Gérer Salon si parent */}
-                    {user?.role === "parent" && (
-                        <Link to="/gerer-salon" className="hover:text-blue-500">Gérer Salons</Link>
+                    {/* 👨‍🏫 Liens visibles uniquement pour les enseignants */}
+                    {user?.role === "enseignant" && (
+                        <>
+                            <Link to="/gerer-salon" className="hover:text-blue-500">Gérer Salons</Link>
+                            <Link to="/creer-salon" className="hover:text-blue-500">➕ Créer Salon</Link>
+                        </>
                     )}
 
-                    {/* ✅ Lien vers Mes Salons si élève */}
+                    {/* 👨‍🎓 Élève */}
                     {user?.role === "eleve" && (
                         <Link to="/mes-salons" className="hover:text-blue-500">📚 Mes Salons</Link>
                     )}

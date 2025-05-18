@@ -36,8 +36,10 @@ public class LoginController {
         }
 
         String token = jwtUtils.generateToken(user.getEmail());
+
         Map<String, Object> response = new HashMap<>();
         response.put("token", token);
+        response.put("id", user.getId()); // ✅ Ajout de l'ID de l'utilisateur
         response.put("username", user.getUsername());
         response.put("role",
                 user instanceof Eleve ? "eleve" :
