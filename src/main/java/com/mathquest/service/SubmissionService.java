@@ -10,8 +10,7 @@ import com.mathquest.repository.ExerciceRepository;
 import com.mathquest.repository.SubmissionRepository;
 import org.springframework.stereotype.Service;
 
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -115,37 +114,34 @@ public class SubmissionService {
         return suggestions;
     }
 
-    public List<ProgressionDTO> getProgressionForEleve(String username) {
-        try {
-            List<Submission> submissions = submissionRepository.findByUsername(username);
-            List<ProgressionDTO> progressionList = new ArrayList<>();
-            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
+    // ✅ Correction ici : accepte un username OU un ID Mongo
+    public List<ProgressionDTO> getProgressionForEleve(String identifier) {
+        String username = identifier;
 
-            for (Submission submission : submissions) {
-                Date dateSoumission;
-                try {
-                    dateSoumission = sdf.parse(submission.getDateSoumission());
-                } catch (ParseException e) {
-                    throw new IllegalArgumentException("Erreur de format de date pour l'exercice.");
-                }
-
-                Optional<Exercice> exerciceOpt = exerciceRepository.findById(submission.getExerciceId());
-                String exerciceTitre = exerciceOpt.map(Exercice::getTitre).orElse("Titre inconnu");
-                String exerciceType = exerciceOpt.map(Exercice::getTypeExercice).orElse("Type inconnu");
-                String exerciceNiveau = exerciceOpt.map(Exercice::getNiveau).orElse("Niveau inconnu");
-
-                progressionList.add(new ProgressionDTO(
-                        sdf.format(dateSoumission),
-                        submission.getScore(),
-                        exerciceTitre,
-                        exerciceType,
-                        exerciceNiveau
-                ));
-            }
-
-            return progressionList;
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la récupération de la progression : " + e.getMessage(), e);
+        // 🔍 Si on reçoit un ID Mongo, on récupère le vrai username
+        Optional<Eleve> eleveById = eleveRepository.findById(identifier);
+        if (eleveById.isPresent()) {
+            username = eleveById.get().getUsername();
         }
+
+        List<Submission> submissions = submissionRepository.findByUsername(username);
+        submissions.sort((a, b) -> b.getDateSoumission().compareTo(a.getDateSoumission()));
+
+        List<ProgressionDTO> progressionList = new ArrayList<>();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
+
+        for (Submission sub : submissions) {
+            Optional<Exercice> optExo = exerciceRepository.findById(sub.getExerciceId());
+
+            progressionList.add(new ProgressionDTO(
+                    sub.getDateSoumission().replace("T", " ").substring(0, 16),
+                    sub.getScore(),
+                    optExo.map(Exercice::getTitre).orElse("Titre inconnu"),
+                    optExo.map(Exercice::getTypeExercice).orElse("Type inconnu"),
+                    optExo.map(Exercice::getNiveau).orElse("Niveau inconnu")
+            ));
+        }
+
+        return progressionList;
     }
 }

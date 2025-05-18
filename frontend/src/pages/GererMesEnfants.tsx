@@ -4,7 +4,6 @@ import axios from "axios";
 
 const GererMesEnfants = () => {
     const [enfants, setEnfants] = useState<any[]>([]);
-    const [allEleves, setAllEleves] = useState<any[]>([]);
     const [newEnfantId, setNewEnfantId] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [duplicateError, setDuplicateError] = useState<string>("");
@@ -12,7 +11,7 @@ const GererMesEnfants = () => {
     const parent = JSON.parse(localStorage.getItem("user") || "{}");
     const parentId = parent?.id;
 
-    // Récupère la liste des enfants associés à ce parent
+    // Récupère les enfants liés au parent
     useEffect(() => {
         if (parentId) {
             getEnfants(parentId)
@@ -21,29 +20,29 @@ const GererMesEnfants = () => {
         }
     }, [parentId]);
 
-    // Récupère tous les élèves pour la liste déroulante
-    useEffect(() => {
-        axios.get("http://localhost:8080/api/eleves")
-            .then((response) => setAllEleves(response.data))
-            .catch(() => setError("Erreur lors de la récupération des élèves."));
-    }, []);
-
-    const handleAddEnfant = () => {
+    const handleAddEnfant = async () => {
         if (!newEnfantId) return;
 
         const enfantExists = enfants.some((enfant) => enfant.id === newEnfantId);
         if (enfantExists) {
             setDuplicateError("Cet enfant est déjà dans la liste.");
             setNewEnfantId("");
-        } else {
-            setDuplicateError("");
-            addEnfant(parentId, newEnfantId)
-                .then(() => {
-                    const added = allEleves.find(e => e.id === newEnfantId);
-                    setEnfants([...enfants, added]);
-                    setNewEnfantId("");
-                })
-                .catch(() => setError("Erreur lors de l'ajout de l'enfant."));
+            return;
+        }
+
+        setDuplicateError("");
+        try {
+            await addEnfant(parentId, newEnfantId);
+
+            // 🔁 On récupère les infos complètes de l'élève ajouté
+            const res = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/eleves/${newEnfantId}`);
+            const enfantData = res.data;
+
+            setEnfants([...enfants, enfantData]);
+            setNewEnfantId("");
+        } catch (err) {
+            console.error(err);
+            setError("Erreur lors de l'ajout de l'enfant.");
         }
     };
 
@@ -52,9 +51,7 @@ const GererMesEnfants = () => {
             .then(() => {
                 setEnfants(enfants.filter((enfant) => enfant.id !== enfantId));
             })
-            .catch(() => {
-                setError("Erreur lors de la suppression de l'enfant.");
-            });
+            .catch(() => setError("Erreur lors de la suppression de l'enfant."));
     };
 
     return (
@@ -64,21 +61,15 @@ const GererMesEnfants = () => {
                     🎓 Gérer mes enfants 🎓
                 </h1>
 
-                {/* Sélection d'un enfant */}
+                {/* Input ID manuel */}
                 <div className="mb-6 text-center">
-                    <select
+                    <input
+                        type="text"
+                        placeholder="Entrer l'ID de l'élève"
                         value={newEnfantId}
                         onChange={(e) => setNewEnfantId(e.target.value)}
-                        className="text-black px-4 py-2 rounded mb-4"
-                    >
-                        <option value="">Sélectionner un élève</option>
-                        {allEleves.map((eleve) => (
-                            <option key={eleve.id} value={eleve.id}>
-                                {eleve.username} ({eleve.email})
-                            </option>
-                        ))}
-                    </select>
-
+                        className="text-black px-4 py-2 rounded mb-4 w-80"
+                    />
                     <button
                         onClick={handleAddEnfant}
                         className="px-6 py-2 bg-purple-500 text-white rounded-lg hover:bg-purple-600 shadow ml-2"
@@ -91,7 +82,7 @@ const GererMesEnfants = () => {
 
                 {error && <p className="text-red-500 mb-4">{error}</p>}
 
-                {/* Liste des enfants ajoutés */}
+                {/* Liste des enfants */}
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 w-full">
                     {enfants.length > 0 ? (
                         enfants.map((enfant: any) => (
@@ -99,9 +90,12 @@ const GererMesEnfants = () => {
                                 key={enfant.id}
                                 className="bg-white text-black p-6 rounded-3xl shadow-xl transform hover:scale-105 transition duration-300 text-center"
                             >
-                                <h2 className="text-2xl font-bold mb-2 text-purple-700">
-                                    {enfant.username}
+                                <h2 className="text-xl font-bold mb-1 text-purple-700">
+                                    👦 {enfant.username}
                                 </h2>
+                                <p className="text-sm text-gray-600 mb-4 break-words">
+                                    ID : {enfant.id}
+                                </p>
                                 <button
                                     onClick={() => handleRemoveEnfant(enfant.id)}
                                     className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow"

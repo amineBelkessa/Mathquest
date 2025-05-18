@@ -2,6 +2,15 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { getUser } from "../services/auth.service";
 
+const BoutonAccueil = ({ to, children, color }: { to: string; children: React.ReactNode; color: string }) => (
+    <Link
+        to={to}
+        className={`px-6 py-3 ${color} text-white font-semibold rounded-lg shadow-lg hover:brightness-110 transition`}
+    >
+        {children}
+    </Link>
+);
+
 export default function Home() {
     const user = getUser();
 
@@ -14,6 +23,11 @@ export default function Home() {
 
             {/* 💬 Slogan */}
             <section className="flex flex-col items-center text-center mt-10 max-w-3xl">
+                {user?.username && (
+                    <p className="mb-2 text-lg text-white font-medium drop-shadow-sm">
+                        Bienvenue, <span className="font-bold">{user.username}</span> 🎉
+                    </p>
+                )}
                 <h1 className="text-6xl font-extrabold drop-shadow-lg">
                     Maîtrisez les maths avec fun !
                 </h1>
@@ -21,100 +35,52 @@ export default function Home() {
                     Des défis interactifs, des jeux et une progression adaptée à votre niveau. Relevez le challenge et devenez un génie des nombres !
                 </p>
 
-                {/* 🎯 Boutons d’action selon le rôle */}
+                {/* 🎯 Actions selon rôle */}
                 <div className="mt-6 flex flex-wrap justify-center gap-4">
-                    {/* ✅ Admin */}
                     {user?.role === "admin" && (
-                        <Link
-                            to="/admin/utilisateurs"
-                            className="px-6 py-3 bg-red-500 text-white font-semibold rounded-lg shadow-lg hover:bg-red-600 transition"
-                        >
-                            📋 Gérer les élèves
-                        </Link>
+                        <BoutonAccueil to="/admin/utilisateurs" color="bg-red-500">📋 Gérer les élèves</BoutonAccueil>
                     )}
 
-                    {/* ✅ Parent */}
                     {user?.role === "parent" && (
                         <>
-                            <Link
-                                to="/gerer-salon"
-                                className="px-6 py-3 bg-purple-500 text-white font-semibold rounded-lg shadow-lg hover:bg-purple-600 transition"
-                            >
-                                🎓 Gérer les salons
-                            </Link>
-                            <Link
-                                to="/creer-salon"
-                                className="px-6 py-3 bg-indigo-500 text-white font-semibold rounded-lg shadow-lg hover:bg-indigo-600 transition"
-                            >
-                                ➕ Créer un salon
-                            </Link>
-                            <Link
-                                to="/performances/test" // ou "/performances/:code" selon ton besoin
-                                className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition"
-                            >
-                                📈 Voir les performances
-                            </Link>
+                            <BoutonAccueil to="/gerer-salon" color="bg-purple-500">🎓 Gérer les salons</BoutonAccueil>
+                            <BoutonAccueil to="/creer-salon" color="bg-indigo-500">➕ Créer un salon</BoutonAccueil>
+                            <BoutonAccueil to="/performances/test" color="bg-blue-500">📈 Voir les performances</BoutonAccueil>
                         </>
                     )}
 
-                    {/* ✅ Élève */}
                     {user?.role === "eleve" && (
                         <>
-                            <Link
-                                to="/rejoindre-salon"
-                                className="px-6 py-3 bg-green-500 text-white font-semibold rounded-lg shadow-lg hover:bg-green-600 transition"
-                            >
-                                🎯 Rejoindre un salon
-                            </Link>
-                            <Link
-                                to="/mes-salons"
-                                className="px-6 py-3 bg-blue-500 text-white font-semibold rounded-lg shadow-lg hover:bg-blue-600 transition"
-                            >
-                                📚 Mes salons
-                            </Link>
-                            <Link
-                                to="/consulter-exercices"
-                                className="px-6 py-3 bg-yellow-500 text-white font-semibold rounded-lg shadow-lg hover:bg-yellow-600 transition"
-                            >
-                                📘 Voir mes exercices
-                            </Link>
+                            <BoutonAccueil to="/rejoindre-salon" color="bg-green-500">🎯 Rejoindre un salon</BoutonAccueil>
+                            <BoutonAccueil to="/mes-salons" color="bg-blue-500">📚 Mes salons</BoutonAccueil>
+                            <BoutonAccueil to="/consulter-exercices" color="bg-yellow-500">📘 Voir mes exercices</BoutonAccueil>
                         </>
                     )}
 
-                    {/* ✅ Invité */}
                     {!user && (
                         <>
-                            <Link
-                                to="/login"
-                                className="px-6 py-3 bg-yellow-400 text-black font-semibold rounded-lg shadow-lg hover:bg-yellow-500 transition"
-                            >
-                                Se connecter
-                            </Link>
-                            <Link
-                                to="/register"
-                                className="px-6 py-3 bg-green-400 text-black font-semibold rounded-lg shadow-lg hover:bg-green-500 transition"
-                            >
-                                S'inscrire
-                            </Link>
+                            <BoutonAccueil to="/login" color="bg-yellow-400 text-black">Se connecter</BoutonAccueil>
+                            <BoutonAccueil to="/register" color="bg-green-400 text-black">S'inscrire</BoutonAccueil>
                         </>
                     )}
                 </div>
             </section>
 
-            {/* 💡 Atouts de MathQuest */}
+            {/* 💡 Avantages */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12 px-4">
-                <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
-                    <h2 className="text-2xl font-bold">🎮 Jeux interactifs</h2>
-                    <p className="mt-2 text-gray-700">Apprenez en vous amusant avec des mini-jeux captivants.</p>
-                </div>
-                <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
-                    <h2 className="text-2xl font-bold">🧠 Quiz intelligents</h2>
-                    <p className="mt-2 text-gray-700">Testez vos connaissances et améliorez votre logique.</p>
-                </div>
-                <div className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center">
-                    <h2 className="text-2xl font-bold">📈 Progression suivie</h2>
-                    <p className="mt-2 text-gray-700">Suivez vos progrès et débloquez de nouveaux niveaux.</p>
-                </div>
+                {[
+                    { titre: "🎮 Jeux interactifs", texte: "Apprenez en vous amusant avec des mini-jeux captivants." },
+                    { titre: "🧠 Quiz intelligents", texte: "Testez vos connaissances et améliorez votre logique." },
+                    { titre: "📈 Progression suivie", texte: "Suivez vos progrès et débloquez de nouveaux niveaux." },
+                ].map(({ titre, texte }, i) => (
+                    <div
+                        key={i}
+                        className="bg-white text-black p-6 rounded-xl shadow-lg hover:scale-105 transition text-center flex flex-col items-center"
+                    >
+                        <h2 className="text-2xl font-bold">{titre}</h2>
+                        <p className="mt-2 text-gray-700">{texte}</p>
+                    </div>
+                ))}
             </div>
 
             {/* Footer */}

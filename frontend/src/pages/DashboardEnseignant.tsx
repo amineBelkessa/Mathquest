@@ -14,25 +14,25 @@ const DashboardEnseignant: React.FC = () => {
             action: () => navigate("/enseignant/creer-exercice"),
         },
         {
-            title: "Créer une salle",
+            title: "Créer un salon",
             description: "Générez un code que les élèves pourront utiliser pour rejoindre.",
             icon: "🏫",
             color: "bg-yellow-100 text-yellow-700",
-            action: () => navigate("/enseignant/creer-salle"), // 🟨 tu devras créer cette route si elle n'existe pas
+            action: () => navigate("/creer-salon"),
         },
         {
             title: "Résultats des élèves",
             description: "Consultez les soumissions, scores et progrès des élèves.",
             icon: "📊",
             color: "bg-green-100 text-green-700",
-            action: () => navigate("/enseignant/eleves"), // ✅ redirige vers ListeEleves
+            action: () => navigate("/enseignant/eleves"),
         },
         {
             title: "Statistiques globales",
             description: "Obtenez des statistiques globales sur la performance des élèves.",
             icon: "📈",
             color: "bg-pink-100 text-pink-700",
-            action: () => navigate("/enseignant/statistiques"), // 🟨 à créer aussi plus tard
+            action: () => navigate("/enseignant/statistiques"),
         },
     ];
 

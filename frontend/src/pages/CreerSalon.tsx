@@ -7,39 +7,53 @@ const CreerSalon: React.FC = () => {
     const [nomSalon, setNomSalon] = useState("");
     const [dateDebut, setDateDebut] = useState("");
     const [dateFin, setDateFin] = useState("");
-
     const [error, setError] = useState("");
     const [success, setSuccess] = useState("");
+    const [isSubmitting, setIsSubmitting] = useState(false);
+
     const navigate = useNavigate();
     const user = getUser();
+
+    // ✅ Sécurité d'accès
+    if (!user || user.role !== "enseignant") {
+        return <p className="text-center text-red-600 mt-10">Accès réservé aux enseignants.</p>;
+    }
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         setError("");
         setSuccess("");
+        setIsSubmitting(true);
 
         if (!dateDebut || !dateFin) {
             setError("Veuillez spécifier une date de début et de fin.");
+            setIsSubmitting(false);
             return;
         }
 
         if (new Date(dateDebut) >= new Date(dateFin)) {
             setError("La date de début doit être avant la date de fin.");
+            setIsSubmitting(false);
             return;
         }
 
         try {
             const data = await createSalon({
                 nom: nomSalon,
-                professeurEmail: user.username, // ✅ correction ici
+                professeurEmail: user.username,
                 dateDebut,
                 dateFin,
             });
-            setSuccess(`Salon créé avec succès ! Code : ${data.code}`);
-            setTimeout(() => navigate("/"), 2000);
-        } catch (err: any) {
+            setSuccess(`✅ Salon créé avec succès ! Code : ${data.code}`);
+            setNomSalon("");
+            setDateDebut("");
+            setDateFin("");
+            setTimeout(() => navigate("/enseignant/dashboard"), 2000);
+        } catch (err) {
             console.error(err);
-            setError("Erreur lors de la création du salon.");
+            setError("❌ Erreur lors de la création du salon.");
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -78,9 +92,14 @@ const CreerSalon: React.FC = () => {
 
                 <button
                     type="submit"
-                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+                    disabled={isSubmitting}
+                    className={`w-full text-white px-4 py-2 rounded transition ${
+                        isSubmitting
+                            ? "bg-blue-400 cursor-not-allowed"
+                            : "bg-blue-600 hover:bg-blue-700"
+                    }`}
                 >
-                    Créer
+                    {isSubmitting ? "Création en cours..." : "Créer"}
                 </button>
             </form>
         </div>

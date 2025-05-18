@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
+import { useParams } from "react-router-dom";
 import { getProgressionData, getSuggestionsForUser } from "../services/progression.service";
 import { Line } from 'react-chartjs-2';
 import {
@@ -33,6 +34,7 @@ interface ProgressionData {
 }
 
 const ProgressionPage: React.FC = () => {
+    const { enfantId } = useParams<{ enfantId: string }>();
     const [progressionData, setProgressionData] = useState<ProgressionData[]>([]);
     const [filteredData, setFilteredData] = useState<ProgressionData[]>([]);
     const [error, setError] = useState<string>("");
@@ -41,8 +43,9 @@ const ProgressionPage: React.FC = () => {
     const [suggestions, setSuggestions] = useState<any[]>([]);
 
     const chartRef = useRef<ChartJS<'line'>>(null);
+
     const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const username = user?.username || null;
+    const username = enfantId || user?.username || null;
 
     useEffect(() => {
         if (!username) {

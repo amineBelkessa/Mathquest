@@ -75,10 +75,18 @@ const DashboardEleve: React.FC = () => {
                 initial={{ opacity: 0, y: -20 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
-                className="text-4xl font-extrabold text-center text-indigo-800 mb-12 tracking-tight"
+                className="text-4xl font-extrabold text-center text-indigo-800 mb-6 tracking-tight"
             >
                 🎓 Tableau de bord <span className="text-indigo-600">Élève</span> 🎓
             </motion.h2>
+
+            {/* ✅ Affichage de l'ID utilisateur */}
+            <p className="text-center mb-8 text-sm text-gray-500">
+                ID de l'élève :{" "}
+                <span className="font-mono font-semibold text-purple-700">
+                    {user?.id}
+                </span>
+            </p>
 
             {badge && (
                 <motion.div
