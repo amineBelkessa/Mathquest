@@ -142,9 +142,15 @@ const RealiserExercice: React.FC = () => {
                 <p className="text-gray-500 text-center mb-4 italic">{exercice.description}</p>
             )}
 
+            {/* ✅ Nouveau lien pour télécharger le PDF via le backend */}
             {exercice.pdfPath && (
                 <div className="text-center mb-6">
-                    <a href={exercice.pdfPath} target="_blank" rel="noreferrer" className="inline-flex items-center gap-2 text-red-500 hover:underline">
+                    <a
+                        href={`http://localhost:8080/api/exercices/pdf/${exercice.id}`}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="inline-flex items-center gap-2 text-red-500 hover:underline"
+                    >
                         <FaFilePdf /> Télécharger l'exercice en PDF
                     </a>
                 </div>
@@ -177,7 +183,6 @@ const RealiserExercice: React.FC = () => {
                             />
                         )}
 
-                        {/* ✅ Affichage de la correction après soumission */}
                         {score !== null && (
                             <div className="mt-2 flex items-center gap-2 text-sm">
                                 {reponses[index] === q.reponseCorrecte ? (
@@ -189,9 +194,9 @@ const RealiserExercice: React.FC = () => {
                                     <>
                                         <FaTimesCircle className="text-red-500" />
                                         <span className="text-red-700">
-                                            Mauvaise réponse. Correction :{" "}
+                      Mauvaise réponse. Correction :{" "}
                                             <span className="font-semibold">{q.reponseCorrecte}</span>
-                                        </span>
+                    </span>
                                     </>
                                 )}
                             </div>
@@ -210,7 +215,7 @@ const RealiserExercice: React.FC = () => {
                 </button>
             ) : (
                 <div className="text-center mt-8">
-                    <h3 className="text-2xl font-bold text-gray-800">🎉 Résultat</h3>
+                    <h3 className="text-2xl font-bold text-gray-800">Résultat 🎉 </h3>
                     <p className="text-lg mt-2">
                         Score : <span className="font-bold">{score.score}%</span> ({score.bonnes} bonnes réponses sur {score.total})
                     </p>
