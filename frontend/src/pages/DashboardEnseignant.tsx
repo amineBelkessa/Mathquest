@@ -28,11 +28,11 @@ const DashboardEnseignant: React.FC = () => {
             action: () => navigate("/enseignant/eleves"),
         },
         {
-            title: "Statistiques globales",
-            description: "Obtenez des statistiques globales sur la performance des élèves.",
-            icon: "📈",
+            title: "Gérez vos salons",
+            description: "Ici, vous pouvez gérer vos salons comme vous le souhaitez.",
+            icon: "🗂️",
             color: "bg-pink-100 text-pink-700",
-            action: () => navigate("/enseignant/statistiques"),
+            action: () => navigate("/gerer-salon"),
         },
     ];
 

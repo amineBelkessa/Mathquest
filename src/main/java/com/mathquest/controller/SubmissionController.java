@@ -20,7 +20,7 @@ public class SubmissionController {
     }
 
     /**
-     * 🔹 Enregistrer une soumission d'exercice (seuls les élèves peuvent soumettre).
+     * Enregistrer une soumission d'exercice (seuls les élèves peuvent soumettre).
      */
     @PostMapping("/{username}")
     public ResponseEntity<Submission> submitExercice(@PathVariable String username, @RequestBody Submission submission) {
@@ -30,7 +30,7 @@ public class SubmissionController {
     }
 
     /**
-     * 🔹 Récupérer les soumissions d'un utilisateur spécifique.
+     * Récupérer les soumissions d'un utilisateur spécifique.
      */
     @GetMapping("/user/{username}")
     public ResponseEntity<List<Submission>> getUserSubmissions(@PathVariable String username) {
@@ -39,7 +39,7 @@ public class SubmissionController {
     }
 
     /**
-     * ✅ Étape 3 — Récupérer toutes les soumissions liées à un salon.
+     * Récupérer toutes les soumissions liées à un salon.
      */
     @GetMapping("/salon/{codeSalon}")
     public ResponseEntity<?> getSubmissionsBySalon(@PathVariable String codeSalon) {
@@ -53,7 +53,7 @@ public class SubmissionController {
     }
 
     /**
-     * 🔍 Afficher l’historique des résultats d’un utilisateur
+     * Afficher l’historique des résultats d’un utilisateur
      */
     @GetMapping("/results/{username}")
     public ResponseEntity<List<SubmissionResultDTO>> getResults(@PathVariable String username) {

@@ -82,11 +82,6 @@ export default function Home() {
                     </div>
                 ))}
             </div>
-
-            {/* Footer */}
-            <footer className="w-full py-6 mt-12 bg-gray-900 text-white text-center text-lg">
-                © {new Date().getFullYear()} MathQuest. Tous droits réservés.
-            </footer>
         </div>
     );
 }
