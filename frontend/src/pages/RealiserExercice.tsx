@@ -142,11 +142,11 @@ const RealiserExercice: React.FC = () => {
                 <p className="text-gray-500 text-center mb-4 italic">{exercice.description}</p>
             )}
 
-            {/* ✅ Nouveau lien pour télécharger le PDF via le backend */}
+            {/* lien pour télécharger le PDF via le backend */}
             {exercice.pdfPath && (
                 <div className="text-center mb-6">
                     <a
-                        href={`http://localhost:8080/api/exercices/pdf/${exercice.id}`}
+                        href={`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/exercices/pdf/${exercice.id}`}
                         target="_blank"
                         rel="noreferrer"
                         className="inline-flex items-center gap-2 text-red-500 hover:underline"
