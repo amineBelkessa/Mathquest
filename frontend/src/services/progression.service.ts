@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/progres"; // L'URL de votre backend pour la progression des élèves
+const API_URL = "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/progres";
 
 
 // 🔹 Fonction pour récupérer la progression d'un élève
