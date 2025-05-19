@@ -45,7 +45,7 @@ const PerformanceSalon: React.FC = () => {
                 const elevesData = await Promise.all(
                     resSalon.data.elevesEmails.map((email: string) =>
                         axios
-                            .get(`http://localhost:8080/api/eleves/${email}`, {
+                            .get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/eleves/${email}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then((res) => res.data)
@@ -56,7 +56,7 @@ const PerformanceSalon: React.FC = () => {
                 const allSubmissions = await Promise.all(
                     resSalon.data.elevesEmails.map((email: string) =>
                         axios
-                            .get(`http://localhost:8080/api/submissions/user/${email}`, {
+                            .get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/submissions/user/${email}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then((res) => res.data)
@@ -67,7 +67,7 @@ const PerformanceSalon: React.FC = () => {
                 const exs = await Promise.all(
                     resSalon.data.exercicesIds.map((id: string) =>
                         axios
-                            .get(`http://localhost:8080/api/exercices/${id}`, {
+                            .get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/exercices/${id}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then((res) => res.data)
