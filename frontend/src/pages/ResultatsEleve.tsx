@@ -24,7 +24,7 @@ const ResultatsEleve: React.FC = () => {
         const fetchResultats = async () => {
             try {
                 const response = await axios.get(
-                    `http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/submissions/results/${username}`
+                    `http://localhost:8080/api/submissions/results/${username}`
                 );
 
                 const rawResults: SubmissionResult[] = response.data;

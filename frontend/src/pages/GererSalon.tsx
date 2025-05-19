@@ -26,7 +26,7 @@ const GererSalon: React.FC = () => {
     useEffect(() => {
         const fetchSalons = async () => {
             try {
-                const res = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/prof/${user.username}`, {
+                const res = await axios.get(`http://localhost:8080/api/salons/prof/${user.username}`, {
                     headers: { Authorization: `Bearer ${localStorage.getItem("token")}` },
                 });
                 setSalons(res.data);

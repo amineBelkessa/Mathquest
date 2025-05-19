@@ -37,7 +37,7 @@ const PerformanceSalon: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const resSalon = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/${code}`, {
+                const resSalon = await axios.get(`http://localhost:8080/api/salons/${code}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setSalon(resSalon.data);
@@ -45,7 +45,7 @@ const PerformanceSalon: React.FC = () => {
                 const elevesData = await Promise.all(
                     resSalon.data.elevesEmails.map((email: string) =>
                         axios
-                            .get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/eleves/${email}`, {
+                            .get(`http://localhost:8080/api/eleves/${email}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then((res) => res.data)
