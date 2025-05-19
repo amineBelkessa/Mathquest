@@ -142,7 +142,7 @@ const RealiserExercice: React.FC = () => {
                 <p className="text-gray-500 text-center mb-4 italic">{exercice.description}</p>
             )}
 
-            {/* lien pour télécharger le PDF via le backend */}
+            {/* ✅ Nouveau lien pour télécharger le PDF via le backend */}
             {exercice.pdfPath && (
                 <div className="text-center mb-6">
                     <a
