@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/parent";
+const API_URL = "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/parent";
 
 // 🔹 Récupérer la liste des enfants d’un parent
 export const getEnfants = async (parentId: string) => {
