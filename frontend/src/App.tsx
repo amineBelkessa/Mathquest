@@ -9,6 +9,11 @@ import Footer from "./components/Layout/Footer";
 import Home from "./pages/Home";
 import Login from "./components/Auth/Login";
 import RegisterForm from "./components/Auth/RegisterForm";
+import Presentation from "./pages/Presentation";
+import Fonctionnalites from "./pages/Fonctionnalites";
+import Temoignages from "./pages/Temoignages";
+import Tarifs from "./pages/Tarifs";
+import Contact  from "./pages/Contact";
 
 // Exercices
 import ConsulterExercices from "./pages/ConsulterExercices";
@@ -89,6 +94,11 @@ const AppContent: React.FC = () => {
                     {/* Public */}
                     <Route path="/consulter-exercices" element={<ConsulterExercices />} />
                     <Route path="/realiser-exercice/:id" element={<RealiserExercice />} />
+                    <Route path="/presentation" element={<Presentation />} />
+                    <Route path="/fonctionnalites" element={<Fonctionnalites />} />
+                    <Route path="/temoignages" element={<Temoignages />} />
+                    <Route path="/tarifs" element={<Tarifs />} />
+                    <Route path="/contact" element={<Contact />} />
 
                     {/* Élève */}
                     {user?.role === "eleve" && (
@@ -110,13 +120,12 @@ const AppContent: React.FC = () => {
                             <Route path="/enseignant/eleves" element={<ListeEleves />} />
                             <Route path="/enseignant/eleves/:username" element={<ResultatsEleve />} />
                             <Route path="/creer-salon" element={<CreerSalon />} />
-                            <Route path="/gerer-salon" element={<GererSalon />} /> {/* ✅ Ajouté ici */}
+                            <Route path="/gerer-salon" element={<GererSalon />} />
                             <Route path="/parent/progression" element={<ParentProgression />} />
                             <Route path="/parent/progression/:enfantId" element={<ProgressionPage />} />
                             <Route path="/performances/:code" element={<PerformanceSalon />} />
                         </>
                     )}
-
 
                     {/* Admin */}
                     {user?.role === "admin" && (
