@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/progres";
+const API_URL = "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/progres";
 
 // 🔹 Récupérer la progression d’un élève
 export async function getProgressionData(username: string): Promise<any> {

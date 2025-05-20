@@ -19,7 +19,7 @@ const ListeEleves: React.FC = () => {
     useEffect(() => {
         const fetchEleves = async () => {
             try {
-                const response = await axios.get("http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/enseignant/eleves");
+                const response = await axios.get("http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/enseignant/eleves");
                 setEleves(response.data);
             } catch (err) {
                 console.error("❌ Erreur lors du chargement des élèves :", err);

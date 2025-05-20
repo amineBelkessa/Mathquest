@@ -30,7 +30,7 @@ const SalonsRejoints: React.FC = () => {
     useEffect(() => {
         const fetchSalons = async () => {
             try {
-                const res = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/eleve/${user.username}`, {
+                const res = await axios.get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/salons/eleve/${user.username}`, {
                     headers: {
                         Authorization: `Bearer ${localStorage.getItem("token")}`,
                     },

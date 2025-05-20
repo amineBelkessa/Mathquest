@@ -54,7 +54,7 @@ const PerformanceSalon: React.FC = () => {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const salonRes = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/salons/${code}`, {
+                const salonRes = await axios.get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/salons/${code}`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setSalon(salonRes.data);
@@ -62,7 +62,7 @@ const PerformanceSalon: React.FC = () => {
                 const elevesData = await Promise.all(
                     salonRes.data.elevesEmails.map((email: string) =>
                         axios
-                            .get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/eleves/${email}`, {
+                            .get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/eleves/${email}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then(res => res.data)
@@ -75,7 +75,7 @@ const PerformanceSalon: React.FC = () => {
                 const submissionsData = await Promise.all(
                     filteredEleves.map((eleve) =>
                         axios
-                            .get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/submissions/user/${eleve.username}`, {
+                            .get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/submissions/user/${eleve.username}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then(res => res.data)
@@ -87,7 +87,7 @@ const PerformanceSalon: React.FC = () => {
                 const exercicesData = await Promise.all(
                     salonRes.data.exercicesIds.map((id: string) =>
                         axios
-                            .get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/exercices/${id}`, {
+                            .get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/exercices/${id}`, {
                                 headers: { Authorization: `Bearer ${token}` },
                             })
                             .then(res => res.data)
@@ -96,7 +96,7 @@ const PerformanceSalon: React.FC = () => {
                 );
                 setExercices(exercicesData.filter(Boolean));
 
-                const classementRes = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/classement`, {
+                const classementRes = await axios.get(`http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/classement`, {
                     headers: { Authorization: `Bearer ${token}` },
                 });
                 setClassement(classementRes.data);

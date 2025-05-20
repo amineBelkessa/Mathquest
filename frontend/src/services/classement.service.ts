@@ -1,5 +1,5 @@
 // classement.service.ts
-const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api";
+const API_URL = "http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api";
 
 export interface Classement {
     username: string;

@@ -26,7 +26,7 @@ const GererMesEnfants = () => {
 
     const fetchScores = async (enfantsData: any[]) => {
         try {
-            const res = await axios.get("http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/classement");
+            const res = await axios.get("http://srv-dpi-proj-mathquest-prod.univ-rouen.fr/api/classement");
             const scoreMap: { [id: string]: number } = {};
             res.data.forEach((entry: any) => {
                 const enfant = enfantsData.find(e => e.username === entry.username);
