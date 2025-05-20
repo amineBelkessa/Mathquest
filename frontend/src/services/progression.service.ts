@@ -1,58 +1,44 @@
 import axios from "axios";
 
-
 const API_URL = "http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/progres";
 
-
-// 🔹 Fonction pour récupérer la progression d'un élève
+// 🔹 Récupérer la progression d’un élève
 export async function getProgressionData(username: string): Promise<any> {
     try {
-        console.log("Appel API avec username: ", username);
         const response = await axios.get(`${API_URL}/results/eleveProgression`, {
-            params: { username }
+            params: { username },
         });
-
-        console.log("Réponse API pour la progression: ", response.data);
-        if (response.status === 200) {
-            return response.data;
-        } else {
-            throw new Error("Erreur lors de la récupération des données de progression");
-        }
+        if (response.status === 200) return response.data;
+        else throw new Error("Erreur lors de la récupération de la progression.");
     } catch (error) {
-        console.error("Erreur dans le service de progression:", error);
-        throw new Error("Impossible de charger la progression des exercices.");
+        console.error("Erreur progression:", error);
+        throw new Error("Impossible de charger la progression.");
     }
 }
 
-// 🔹 Fonction pour récupérer des suggestions d'exercices pour un élève
+// 🔹 Récupérer des suggestions d’exercices (à partir des soumissions de l’élève)
 export async function getSuggestionsForUser(username: string) {
     try {
-        console.log("Appel de l'API pour récupérer les suggestions...");
         const response = await axios.get(`${API_URL}/suggestions/${username}`);
-        console.log("Réponse des suggestions:", response.data);
-
         const suggestions = response.data;
-        let filteredSuggestions: any[] = [];
 
-        // Regrouper les suggestions par type d'exercice
-        const typeMap: { [key: string]: any[] } = {};
+        // 💡 Affichage seulement informatif (filtrage unique par exercice)
+        const uniqueSuggestionsMap = new Map();
 
-        suggestions.forEach((suggestion: any) => {
-            if (!typeMap[suggestion.typeExercice]) {
-                typeMap[suggestion.typeExercice] = [];
+        suggestions.forEach((ex: any) => {
+            if (!uniqueSuggestionsMap.has(ex.id)) {
+                uniqueSuggestionsMap.set(ex.id, {
+                    id: ex.id,
+                    titre: ex.titre,
+                    niveau: ex.niveau,
+                    typeExercice: ex.typeExercice,
+                });
             }
-            typeMap[suggestion.typeExercice].push(suggestion);
         });
 
-        // Ne garder que 2 suggestions maximum par type
-        Object.keys(typeMap).forEach((type) => {
-            const exercises = typeMap[type];
-            filteredSuggestions.push(...exercises.slice(0, 2));
-        });
-
-        return filteredSuggestions;
+        return Array.from(uniqueSuggestionsMap.values());
     } catch (error) {
-        console.error("Erreur dans le service de suggestions:", error);
-        throw error;
+        console.error("Erreur suggestions:", error);
+        return [];
     }
 }

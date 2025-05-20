@@ -47,6 +47,7 @@ import ProgressionPage from "./pages/ProgressionPage";
 
 // Auth utils
 import { getUser } from "./services/auth.service";
+import Leaderboard from "./pages/Classement";
 
 const AppContent: React.FC = () => {
     const [user, setUser] = useState<any | null>(null);
@@ -134,6 +135,7 @@ const AppContent: React.FC = () => {
                             <Route path="/parent/gererenfants" element={<GererMesEnfants />} />
                             <Route path="/parent/enfants" element={<EnfantsList />} />
                             <Route path="/parent/progression" element={<ParentProgression />} />
+                            <Route path="/parent/classement" element={<Leaderboard />} />
                             <Route path="/parent/progression/:enfantId" element={<ProgressionPage />} />
                             <Route path="/performances/:code" element={<PerformanceSalon />} />
                             <Route path="/gerer-salon" element={<GererSalon />} />

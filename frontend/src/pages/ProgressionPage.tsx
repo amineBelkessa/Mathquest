@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from "react";
-import { useParams, Link } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { getProgressionData, getSuggestionsForUser } from "../services/progression.service";
 import { Line } from "react-chartjs-2";
 import {
@@ -14,15 +14,7 @@ import {
 } from "chart.js";
 import './ProgressionPage.css';
 
-ChartJS.register(
-    CategoryScale,
-    LinearScale,
-    LineElement,
-    PointElement,
-    Title,
-    Tooltip,
-    Legend
-);
+ChartJS.register(CategoryScale, LinearScale, LineElement, PointElement, Title, Tooltip, Legend);
 
 interface ProgressionData {
     date: string;
@@ -36,14 +28,15 @@ const ProgressionPage: React.FC = () => {
     const { enfantId } = useParams<{ enfantId: string }>();
     const [progressionData, setProgressionData] = useState<ProgressionData[]>([]);
     const [filteredData, setFilteredData] = useState<ProgressionData[]>([]);
+    const [suggestions, setSuggestions] = useState<any[]>([]);
     const [error, setError] = useState<string>("");
+
     const [selectedMonth, setSelectedMonth] = useState<string>("");
     const [selectedType, setSelectedType] = useState<string>("");
-    const [suggestions, setSuggestions] = useState<any[]>([]);
 
     const chartRef = useRef<ChartJS<'line'>>(null);
-    const user = JSON.parse(localStorage.getItem("user") || "{}");
-    const username = enfantId || user?.username || null;
+
+    const username = enfantId || JSON.parse(localStorage.getItem("user") || "{}")?.username || null;
 
     useEffect(() => {
         if (!username) {
@@ -51,7 +44,7 @@ const ProgressionPage: React.FC = () => {
             return;
         }
 
-        const chartInstance = chartRef.current; // ✅ FIX: copy ref value here
+        const chartInstance = chartRef.current;
 
         const fetchData = async () => {
             try {
@@ -69,32 +62,28 @@ const ProgressionPage: React.FC = () => {
         fetchData();
 
         return () => {
-            if (chartInstance) {
-                chartInstance.destroy(); // ✅ FIX: use local ref variable
-            }
+            if (chartInstance) chartInstance.destroy();
         };
     }, [username]);
 
-    const handleFilterByType = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const type = event.target.value;
+    const handleFilterByType = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const type = e.target.value;
         setSelectedType(type);
         filterData(type, selectedMonth);
     };
 
-    const handleFilterByMonth = (event: React.ChangeEvent<HTMLSelectElement>) => {
-        const month = event.target.value;
+    const handleFilterByMonth = (e: React.ChangeEvent<HTMLSelectElement>) => {
+        const month = e.target.value;
         setSelectedMonth(month);
         filterData(selectedType, month);
     };
 
     const filterData = (type: string, month: string) => {
         let filtered = [...progressionData];
-        if (type) {
-            filtered = filtered.filter((data) => data.typeExercice === type);
-        }
+        if (type) filtered = filtered.filter((d) => d.typeExercice === type);
         if (month) {
-            filtered = filtered.filter((data) => {
-                const dataMonth = new Date(data.date).getMonth() + 1;
+            filtered = filtered.filter((d) => {
+                const dataMonth = new Date(d.date).getMonth() + 1;
                 return dataMonth === parseInt(month);
             });
         }
@@ -117,13 +106,13 @@ const ProgressionPage: React.FC = () => {
 
     return (
         <div className="container mx-auto p-6">
-            <h2 className="text-4xl font-bold text-indigo-700 text-center mb-6">📈 Ma Progression</h2>
+            <h2 className="text-4xl font-bold text-indigo-700 text-center mb-6">📈 Suivi de progression</h2>
             {error && <p className="text-red-500 text-center">{error}</p>}
 
             {/* Filtres */}
             <div className="filters-container mb-8 flex gap-4 justify-center">
                 <select onChange={handleFilterByType} className="bg-indigo-600 text-white py-2 px-4 rounded">
-                    <option value="">Sélectionner Type d'exercice</option>
+                    <option value="">Filtrer par type</option>
                     <option value="arithmétique">Arithmétique</option>
                     <option value="géométrie">Géométrie</option>
                     <option value="logique">Logique</option>
@@ -132,7 +121,7 @@ const ProgressionPage: React.FC = () => {
                 </select>
 
                 <select onChange={handleFilterByMonth} className="bg-blue-600 text-white py-2 px-4 rounded">
-                    <option value="">Sélectionner Mois</option>
+                    <option value="">Filtrer par mois</option>
                     {[
                         "Janvier", "Février", "Mars", "Avril", "Mai", "Juin",
                         "Juillet", "Août", "Septembre", "Octobre", "Novembre", "Décembre"
@@ -148,34 +137,26 @@ const ProgressionPage: React.FC = () => {
                 <Line data={chartData} ref={chartRef} />
             </div>
 
-            {/* Suggestions */}
+            {/* ✅ Suggestions adaptées au parent */}
             <div className="suggestions-container mb-12">
                 <h3 className="text-2xl font-bold text-gray-800 mb-4">Suggestions d'exercices</h3>
                 <p className="text-gray-600 mb-4">
-                    Voici quelques exercices recommandés pour améliorer vos compétences en fonction de vos résultats récents.
+                    Voici des exercices recommandés pour ton enfant, basés sur ses résultats récents.
                 </p>
 
                 {suggestions.length > 0 ? (
-                    <ul className="list-disc pl-5 space-y-4">
+                    <ul className="space-y-4">
                         {suggestions.map((suggestion, index) => (
-                            <li key={index} className="flex justify-between items-center">
-                                <span>{suggestion.titre} - {suggestion.typeExercice}</span>
-                                <Link
-                                    to={`/realiser-exercice/${suggestion.id}`}
-                                    className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 ml-4"
-                                >
-                                    Réaliser l'exercice
-                                </Link>
+                            <li key={index} className="border p-4 rounded bg-white shadow">
+                                <p className="font-semibold text-indigo-700">{suggestion.titre}</p>
+                                <p className="text-gray-600 text-sm">
+                                    Type : {suggestion.typeExercice} | Niveau : {suggestion.niveau}
+                                </p>
                             </li>
                         ))}
                     </ul>
                 ) : (
-                    <div className="text-gray-600">
-                        <p>Aucune suggestion disponible.</p>
-                        <Link to="/consulter-exercices" className="text-blue-600 underline block mt-2">
-                            Voir tous les exercices
-                        </Link>
-                    </div>
+                    <p className="text-gray-500">Aucune suggestion disponible.</p>
                 )}
             </div>
 

@@ -96,7 +96,6 @@ public class SubmissionService {
 
         System.out.println("📊 Suggestions - utilisateur : " + username);
 
-        // 🔁 Regrouper les scores par type
         for (Submission submission : submissions) {
             Optional<Exercice> optExo = exerciceRepository.findById(submission.getExerciceId());
             if (optExo.isPresent()) {
@@ -109,32 +108,28 @@ public class SubmissionService {
             }
         }
 
-        for (var entry : typeScoresMap.entrySet()) {
-            double avg = entry.getValue().stream().mapToInt(i -> i).average().orElse(0);
-            System.out.println("➡️ Type : " + entry.getKey() + " | Moyenne : " + avg);
-        }
+        // 🔽 Étape 1 : Priorité aux types avec mauvaise moyenne
+        typeScoresMap.entrySet().stream()
+                .filter(entry -> entry.getValue().stream().mapToInt(i -> i).average().orElse(100) < 60)
+                .sorted(Comparator.comparingDouble(entry -> entry.getValue().stream().mapToInt(i -> i).average().orElse(100)))
+                .limit(2)
+                .forEach(entry -> {
+                    String type = entry.getKey();
+                    List<Exercice> exercices = exerciceRepository.findByTypeExerciceRegex("(?i)^" + type + "$");
+                    exercices.stream()
+                            .filter(e -> seenExoIds.add(e.getId()))
+                            .limit(2)
+                            .forEach(suggestions::add);
+                });
 
-        // 🔽 Étape 1 : Suggestions sur types < 60
-        for (Map.Entry<String, List<Integer>> entry : typeScoresMap.entrySet()) {
-            String type = entry.getKey();
-            double moyenne = entry.getValue().stream().mapToInt(i -> i).average().orElse(100);
-
-            if (moyenne < 60) {
-                List<Exercice> exercices = exerciceRepository.findByTypeExerciceRegex("(?i)^" + type + "$");
-                exercices.stream()
-                        .filter(e -> seenExoIds.add(e.getId()))
-                        .limit(2)
-                        .forEach(suggestions::add);
-            }
-        }
-
-        // 🔽 Étape 2 : Si aucune suggestion, proposer les types les plus faibles
+        // 🔽 Étape 2 : Si aucune suggestion, prendre les types les moins maîtrisés
         if (suggestions.isEmpty()) {
             typeScoresMap.entrySet().stream()
-                    .sorted(Comparator.comparingDouble(e -> e.getValue().stream().mapToInt(i -> i).average().orElse(100)))
+                    .sorted(Comparator.comparingDouble(entry -> entry.getValue().stream().mapToInt(i -> i).average().orElse(100)))
                     .limit(2)
                     .forEach(entry -> {
-                        List<Exercice> exercices = exerciceRepository.findByTypeExerciceRegex("(?i)^" + entry.getKey() + "$");
+                        String type = entry.getKey();
+                        List<Exercice> exercices = exerciceRepository.findByTypeExerciceRegex("(?i)^" + type + "$");
                         exercices.stream()
                                 .filter(e -> seenExoIds.add(e.getId()))
                                 .limit(2)
@@ -142,11 +137,19 @@ public class SubmissionService {
                     });
         }
 
-        System.out.println("✅ Suggestions retournées :");
-        suggestions.forEach(s -> System.out.println(" - " + s.getTitre() + " (" + s.getTypeExercice() + ")"));
+        // 🔽 Étape 3 : Si encore vide, prendre 2 exercices récents
+        if (suggestions.isEmpty()) {
+            suggestions.addAll(exerciceRepository.findAll().stream()
+                    .filter(e -> seenExoIds.add(e.getId()))
+                    .limit(2)
+                    .toList());
+        }
 
+        System.out.println("✅ Suggestions générées pour " + username + " :");
+        suggestions.forEach(e -> System.out.println(" - " + e.getTitre() + " | " + e.getTypeExercice()));
         return suggestions;
     }
+
 
     public List<ProgressionDTO> getProgressionForEleve(String identifier) {
         String username = identifier;

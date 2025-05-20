@@ -47,7 +47,7 @@ const ParentDashboard: React.FC = () => {
                         <h2 className="text-2xl font-bold mb-2">🏆 Consulter classement</h2>
                         <p className="text-gray-700 mb-6">Voir les classements des enfants basés sur leur performance.</p>
                         <button
-                            onClick={() => navigate("/eleve/classement")}
+                            onClick={() => navigate("/parent/classement")}
                             className="px-6 py-2 bg-green-500 text-white rounded-lg hover:bg-green-600 shadow"
                         >
                             Consulter classement
