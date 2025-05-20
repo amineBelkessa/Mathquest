@@ -1,24 +1,44 @@
 import React, { useEffect, useState } from "react";
 import { getEnfants, addEnfant, removeEnfant } from "../services/parent.service";
 import axios from "axios";
+import BadgeDisplay from "./BadgeDisplay";
 
 const GererMesEnfants = () => {
     const [enfants, setEnfants] = useState<any[]>([]);
     const [newEnfantId, setNewEnfantId] = useState<string>("");
     const [error, setError] = useState<string>("");
     const [duplicateError, setDuplicateError] = useState<string>("");
+    const [scores, setScores] = useState<{ [id: string]: number }>({});
 
     const parent = JSON.parse(localStorage.getItem("user") || "{}");
     const parentId = parent?.id;
 
-    // Récupère les enfants liés au parent
     useEffect(() => {
         if (parentId) {
             getEnfants(parentId)
-                .then((data) => setEnfants(data))
+                .then((data) => {
+                    setEnfants(data);
+                    fetchScores(data);
+                })
                 .catch(() => setError("Erreur lors de la récupération des enfants."));
         }
     }, [parentId]);
+
+    const fetchScores = async (enfantsData: any[]) => {
+        try {
+            const res = await axios.get("http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/classement");
+            const scoreMap: { [id: string]: number } = {};
+            res.data.forEach((entry: any) => {
+                const enfant = enfantsData.find(e => e.username === entry.username);
+                if (enfant) {
+                    scoreMap[enfant.id] = entry.totalScore;
+                }
+            });
+            setScores(scoreMap);
+        } catch (e) {
+            console.error("Erreur récupération des scores:", e);
+        }
+    };
 
     const handleAddEnfant = async () => {
         if (!newEnfantId) return;
@@ -33,13 +53,12 @@ const GererMesEnfants = () => {
         setDuplicateError("");
         try {
             await addEnfant(parentId, newEnfantId);
-
-            // 🔁 On récupère les infos complètes de l'élève ajouté
             const res = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/eleves/${newEnfantId}`);
             const enfantData = res.data;
-
-            setEnfants([...enfants, enfantData]);
+            const updatedEnfants = [...enfants, enfantData];
+            setEnfants(updatedEnfants);
             setNewEnfantId("");
+            fetchScores(updatedEnfants); // met à jour les scores
         } catch (err) {
             console.error(err);
             setError("Erreur lors de l'ajout de l'enfant.");
@@ -49,7 +68,10 @@ const GererMesEnfants = () => {
     const handleRemoveEnfant = (enfantId: string) => {
         removeEnfant(parentId, enfantId)
             .then(() => {
-                setEnfants(enfants.filter((enfant) => enfant.id !== enfantId));
+                const updated = enfants.filter((enfant) => enfant.id !== enfantId);
+                setEnfants(updated);
+                const { [enfantId]: _, ...rest } = scores;
+                setScores(rest);
             })
             .catch(() => setError("Erreur lors de la suppression de l'enfant."));
     };
@@ -93,9 +115,16 @@ const GererMesEnfants = () => {
                                 <h2 className="text-xl font-bold mb-1 text-purple-700">
                                     👦 {enfant.username}
                                 </h2>
-                                <p className="text-sm text-gray-600 mb-4 break-words">
+                                <p className="text-sm text-gray-600 mb-2 break-words">
                                     ID : {enfant.id}
                                 </p>
+
+                                {scores[enfant.id] !== undefined && (
+                                    <div className="mb-4">
+                                        <BadgeDisplay score={scores[enfant.id]} />
+                                    </div>
+                                )}
+
                                 <button
                                     onClick={() => handleRemoveEnfant(enfant.id)}
                                     className="px-6 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 shadow"
