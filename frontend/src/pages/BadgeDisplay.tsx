@@ -1,4 +1,4 @@
-﻿// src/components/BadgeDisplay.tsx
+// src/components/BadgeDisplay.tsx
 import React from "react";
 import ferBadge from "../assets/badges/fer.png";
 import bronzeBadge from "../assets/badges/bronze.png";
@@ -30,3 +30,4 @@ const BadgeDisplay: React.FC<{ score: number }> = ({ score }) => {
 };
 
 export default BadgeDisplay;
+git add .git add .
