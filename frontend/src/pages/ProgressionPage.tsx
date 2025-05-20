@@ -51,6 +51,8 @@ const ProgressionPage: React.FC = () => {
             return;
         }
 
+        const chartInstance = chartRef.current; // ✅ FIX: copy ref value here
+
         const fetchData = async () => {
             try {
                 const data = await getProgressionData(username);
@@ -67,9 +69,8 @@ const ProgressionPage: React.FC = () => {
         fetchData();
 
         return () => {
-            const chartInstance = chartRef.current;
             if (chartInstance) {
-                chartInstance.destroy();
+                chartInstance.destroy(); // ✅ FIX: use local ref variable
             }
         };
     }, [username]);
@@ -101,13 +102,14 @@ const ProgressionPage: React.FC = () => {
     };
 
     const chartData = {
-        labels: filteredData.map(() => ''),
+        labels: filteredData.map((data) => new Date(data.date).toLocaleDateString()),
         datasets: [
             {
                 label: "Score",
                 data: filteredData.map((data) => data.score),
                 borderColor: "#4C51BF",
-                fill: false,
+                backgroundColor: "rgba(76, 81, 191, 0.2)",
+                fill: true,
                 tension: 0.1,
             },
         ],
@@ -183,10 +185,10 @@ const ProgressionPage: React.FC = () => {
                 <table className="min-w-full table-auto border-collapse mb-8">
                     <thead>
                     <tr>
-                        <th className="px-4 py-2 border-b">Date</th>
-                        <th className="px-4 py-2 border-b">Type</th>
-                        <th className="px-4 py-2 border-b">Score</th>
-                        <th className="px-4 py-2 border-b">Niveau</th>
+                        <th className="px-4 py-2 border-b text-left">📅 Date</th>
+                        <th className="px-4 py-2 border-b text-left">📘 Type</th>
+                        <th className="px-4 py-2 border-b text-left">📊 Score</th>
+                        <th className="px-4 py-2 border-b text-left">🎯 Niveau</th>
                     </tr>
                     </thead>
                     <tbody>
