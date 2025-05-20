@@ -30,4 +30,3 @@ const BadgeDisplay: React.FC<{ score: number }> = ({ score }) => {
 };
 
 export default BadgeDisplay;
-git add .git add .
