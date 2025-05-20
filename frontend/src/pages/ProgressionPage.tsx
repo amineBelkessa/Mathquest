@@ -42,7 +42,6 @@ const ProgressionPage: React.FC = () => {
     const [suggestions, setSuggestions] = useState<any[]>([]);
 
     const chartRef = useRef<ChartJS<'line'>>(null);
-
     const user = JSON.parse(localStorage.getItem("user") || "{}");
     const username = enfantId || user?.username || null;
 
@@ -52,8 +51,6 @@ const ProgressionPage: React.FC = () => {
             return;
         }
 
-        console.log(">> Username utilisé pour suggestions:", username);
-
         const fetchData = async () => {
             try {
                 const data = await getProgressionData(username);
@@ -61,7 +58,6 @@ const ProgressionPage: React.FC = () => {
                 setFilteredData(data);
 
                 const suggestionsData = await getSuggestionsForUser(username);
-                console.log(">> Suggestions récupérées:", suggestionsData);
                 setSuggestions(suggestionsData);
             } catch (err) {
                 setError("Impossible de charger la progression des exercices.");
@@ -71,9 +67,9 @@ const ProgressionPage: React.FC = () => {
         fetchData();
 
         return () => {
-            const currentChart = chartRef.current;
-            if (currentChart) {
-                currentChart.destroy();
+            const chartInstance = chartRef.current;
+            if (chartInstance) {
+                chartInstance.destroy();
             }
         };
     }, [username]);
@@ -92,18 +88,15 @@ const ProgressionPage: React.FC = () => {
 
     const filterData = (type: string, month: string) => {
         let filtered = [...progressionData];
-
         if (type) {
             filtered = filtered.filter((data) => data.typeExercice === type);
         }
-
         if (month) {
             filtered = filtered.filter((data) => {
                 const dataMonth = new Date(data.date).getMonth() + 1;
                 return dataMonth === parseInt(month);
             });
         }
-
         setFilteredData(filtered);
     };
 
@@ -177,7 +170,6 @@ const ProgressionPage: React.FC = () => {
                 ) : (
                     <div className="text-gray-600">
                         <p>Aucune suggestion disponible.</p>
-                        <pre className="text-xs mt-2">{JSON.stringify(suggestions, null, 2)}</pre>
                         <Link to="/consulter-exercices" className="text-blue-600 underline block mt-2">
                             Voir tous les exercices
                         </Link>
