@@ -37,11 +37,11 @@ const Header = () => {
                 {/* MENU DE NAVIGATION */}
                 <nav className="hidden md:flex space-x-6 text-gray-700 font-medium">
                     <button onClick={handleAccueil} className="hover:text-blue-500">Accueil</button>
-                    <Link to="/news" className="hover:text-blue-500">News</Link>
-                    <Link to="/agenda" className="hover:text-blue-500">Agenda</Link>
-                    <Link to="/students" className="hover:text-blue-500">Étudiants</Link>
-                    <Link to="/jobs" className="hover:text-blue-500">Jobs</Link>
-                    <Link to="/shop" className="hover:text-blue-500">Shop</Link>
+                    <Link to="/presentation" className="hover:text-blue-500">Présentation</Link>
+                    <Link to="/fonctionnalites" className="hover:text-blue-500">Fonctionnalités</Link>
+                    <Link to="/temoignages" className="hover:text-blue-500">Témoignages</Link>
+                    <Link to="/tarifs" className="hover:text-blue-500">Tarifs</Link>
+                    <Link to="/contact" className="hover:text-blue-500">Contact</Link>
 
                     {/* 👨‍🎓 Élève */}
                     {user?.role === "eleve" && (
