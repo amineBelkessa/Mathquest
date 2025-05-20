@@ -51,16 +51,25 @@ const GererMesEnfants = () => {
         }
 
         setDuplicateError("");
+        setError("");
+
         try {
             await addEnfant(parentId, newEnfantId);
-            const res = await axios.get(`http://srv-dpi-proj-mathquest-test.univ-rouen.fr/api/eleves/${newEnfantId}`);
-            const enfantData = res.data;
-            const updatedEnfants = [...enfants, enfantData];
-            setEnfants(updatedEnfants);
-            setNewEnfantId("");
-            fetchScores(updatedEnfants); // met à jour les scores
+
+            // Attendre que le backend mette à jour la relation
+            setTimeout(async () => {
+                try {
+                    const updatedEnfants = await getEnfants(parentId);
+                    setEnfants(updatedEnfants);
+                    fetchScores(updatedEnfants);
+                    setNewEnfantId("");
+                } catch (fetchErr) {
+                    console.error("Erreur récupération après ajout:", fetchErr);
+                    setError("L'enfant a été ajouté, mais la mise à jour a échoué.");
+                }
+            }, 300);
         } catch (err) {
-            console.error(err);
+            console.error("Erreur ajout:", err);
             setError("Erreur lors de l'ajout de l'enfant.");
         }
     };
