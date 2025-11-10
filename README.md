@@ -133,10 +133,9 @@ Cela permet à l’application React de communiquer avec le backend local Spring
 ---
 
 ## 🧑‍💻 Auteur
-
-**Amine Belkessa**  
+  
 🎓 Master 2 Génie Informatique Logiciel — Université de Rouen  
-📧 amine.belkessa@univ-rouen.fr  
+   equipe mathquest
 🌐 [GitHub](https://github.com/amineBelkessa)
 
 ---
